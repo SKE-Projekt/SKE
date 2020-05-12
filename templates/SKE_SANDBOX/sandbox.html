@@ -1,0 +1,123 @@
+{% extends 'SKE/base.html' %}
+
+{% block library_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/codemirror.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/theme/material.min.css" />
+{% endblock library_css %}
+
+{% block library_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/mode/python/python.min.js"></script>
+{% endblock library_js %}
+
+{% block content %}
+<section class="hero sandbox-hero has-text-centered">
+    <div class="hero-body sandbox-hero-body">
+        <div class="columns">
+            <div class="column is-two-thirds-desktop is-full-mobile is-full-tablet">
+                <div id="editor" class="editor"></div>
+
+                {% if current_user.is_authenticated %}
+                <a id="executeCode" href="#" class="button is-success">Uruchom program</a>
+                {% else %}
+                <a href="">Aby skorzystać z sandboxa musisz być zalogowany.</a>
+                {% endif %}
+            </div>
+            <div id="input-column" class="column is-one-third-desktop is-full-mobile is-full-tablet">
+                <h1 class="title" style="margin-bottom: 1px;">Wejście</h1>
+                <div class="section input-data">
+                    <div class="control">
+                        <textarea id="input-data" class="textarea is-info"
+                            placeholder="Tutaj wpisz wejście swojego programu - linijka po linijce."></textarea>
+                    </div>
+                </div>
+                <h1 class="title" style="margin-bottom: 1px;">Wyjście programu</h1>
+                <div class="section output-data">
+                    <div class="control">
+                        <textarea id="output-data" class="textarea"
+                            placeholder="Tutaj pojawi się wyjście twojego programu" readonly></textarea>
+                    </div>
+                    <!-- <a href="" id="output-data-show" style="margin-top: 1rem;display: inline-block;">Pokaż</a> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="hero is-warning has-text-centered">
+    <div class="hero-body">
+        <h1 class="title">Zainteresowany?</h1>
+    </div>
+</section>
+
+<section class="section has-text-centered">
+    <h1 class="title has-text-centered">Sprawdź swoje siły w konkursie</h1>
+    <div class="special-list has-text-left" style="margin: auto; display: inline-block;">
+        <h5 class="special-list-item" style="font-size: 1.2rem"><i class="fas fa-ethernet"></i> - Zadania sprawdzające
+            twoje rozumienie języka jak
+            i
+            programowania samego w sobie</h5>
+        <h5 class="special-list-item" style="font-size: 1.2rem"><i class="fas fa-ethernet"></i> - Możliwość sprawdzenia
+            się w rywalizacji z innymi
+            osobami w otwartym rankingu </h5>
+        <h5 class="special-list-item" style="font-size: 1.2rem"><i class="fas fa-ethernet"></i> - Zadania z wzrastającym
+            poziomem trudności
+        </h5>
+    </div>
+    <br>
+    <br>
+    <br>
+    <a href="" class="button is-warning is-medium">Zapisz się w konkursie</a>
+</section>
+<section class="hero is-info has-text-centered">
+    <div class="hero-body">
+        <h1 class="title">Nie do końca rozumiesz?</h1>
+    </div>
+</section>
+<section class="section has-text-centered">
+    <h1 class="title has-text-centered">Zobacz nasz kurs</h1>
+    <br>
+    <a href="" class="button is-info is-medium">Przejdź do kursu</a>
+</section>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+    test_value = `# Nie wiesz co i jak? Nie przejmuj się
+# przygotujemy kursy dzięki którym
+# pojmiesz Ed-a w mgnieniu oka
+String var = "Hello";
+Print(var, " World!");
+`;
+
+    var editor = document.getElementById("editor");
+    var mCEditor = CodeMirror(editor, {
+        value: test_value,
+        mode: "python",
+        lineNumbers: true,
+        theme: "material"
+    });
+</script>
+
+<script>
+    $('#executeCode').click(function () {
+        var code = mCEditor.getValue("</br>");
+        var input_data = $("#input-data").val().split('\n').join('</br>');
+
+        $("#code").val(code);
+        $("#input_data").val(input_data);
+        console.log(input_data);
+
+        $.post('/sandbox/api/evaluate', $("#hidden-code-form").serialize()).done(function (data) {
+            if (data['code'] != 0) {
+                $("#output-data").val("Twój program nie wykonał się poprawnie:\n" + data['msg']);
+            } else {
+                $("#output-data").val("Twój program wykonał się poprawnie:\n" + data['msg']);
+            }
+        }).fail(function (data) {
+            console.log(JSON.stringify(data));
+            $("#output-data").val("Twój program nie wykonał się poprawnie:\n" + data['msg']);
+        });
+    });
+</script>
+{% endblock scripts %}

@@ -1,0 +1,61 @@
+.stopa {
+    bottom: .5rem;
+    right: .5rem;
+    position: fixed;
+    z-index: 11111;
+
+}
+
+.stopa > h5 {
+    font-weight: bold;;
+}
+
+.contact-tiles {
+    margin: auto;
+}
+
+.form-narrow {
+    width: 91vw;
+    max-width: 555px;
+    margin: .5em auto;
+}
+
+.sandbox-hero-body {
+    padding-bottom: 1px;
+}
+
+.hero-foot {
+    margin-top: -2.3em;
+}
+
+#input-column {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#output-data {
+    height: 15vw;
+    max-height: 15vw;
+}
+
+#input-data {
+    height: 7vw;
+    max-height: 7vw;
+}
+
+.editor {
+    width: 711px !important;
+    max-width: 81vw !important;
+    border-radius: 3px !important;
+    height: 511px !important;
+
+    margin: auto;
+}
+
+.CodeMirror {
+    padding: .5rem;
+    border-radius: 1rem;
+    height: 451px !important;
+    font-size: .95rem;
+    text-align: left;
+}

@@ -1,0 +1,38 @@
+{% extends 'SKE/base.html' %}
+
+{% block content %}
+<div class="section has-text-centered">
+    <h1 class="title">Zaloguj się</h1>
+    <form method="post" class="form-narrow has-text-centered">
+        {% csrf_token %}
+
+        <div class="field">
+            <div class="control">
+                <label class="label"> Nazwa użytkownika </label>
+                {{ form.username }}
+                {% for username_error in form.username.errors %}
+                    <p class="help is-danger"> {{ password_error }} </p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="control">
+                <label class="label"> Hasło </label>
+                {{ form.password }}
+                {% for password_error in form.password.errors %}
+                    <p class="help is-danger"> {{ password_error }} </p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <br />
+        <br />
+        <a href="">Nie masz konta? Załóż je tutaj!</a>
+
+        <br />
+        <br />
+        <button type="submit" class="button is-success is-light">Zaloguj się</button>
+    </form>
+</div>
+{% endblock content %}
