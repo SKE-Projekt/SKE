@@ -13,7 +13,7 @@ def SubmitSandboxSubmissionView(request):
     print(request.POST)
     sandboxSubmissionForm = forms.SandboxSubmissionForm(request.POST)
 
-    if sandboxSubmissionForm.is_valid():
+    if not sandboxSubmissionForm.is_valid():
         return HttpResponse("ERROR")
     else:
         source_code = sandboxSubmissionForm.cleaned_data['source_code']

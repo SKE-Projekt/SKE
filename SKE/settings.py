@@ -116,8 +116,15 @@ STATICFILES_DIRS = (
 
 
 # Logout redirection
+
 LOGOUT_REDIRECT_URL = 'login'
 
 
 # Uploaded files
+
 FILES_DIR = os.path.join(BASE_DIR, 'files')
+
+
+# Edlang Binary
+
+EDLANG_BINARY = os.path.join(BASE_DIR, os.path.normpath('../Edlang/bin/edlang.exe'))

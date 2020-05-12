@@ -104,14 +104,14 @@ Print(var, " World!");
 
 <script>
     $('#executeCode').click(function () {
-        var code = mCEditor.getValue();
-        var input_data = $("#input-data").val(); //.split('\n').join('</br>');
+        var code = mCEditor.getValue("</br>");
+        var input_data = $("#input-data").val().split('\n').join('</br>');
 
         $("#id_source_code").val(code);
         $("#id_input_code").val(input_data);
 
         $.post("{% url 'sandbox_api_submit' %}", $("#hidden-code-form").serialize()).done(function (data) {
-            if (data == "SUCCESS") {
+            if (data != "ERROR") {
                 console.log(data);
             } else {
                 console.log("FAIL");
@@ -119,6 +119,7 @@ Print(var, " World!");
             }
         }).fail(function (data) {
             console.log("WTF");
+            console.log(data);
         });
 
         return false;
