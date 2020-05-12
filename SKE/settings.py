@@ -114,5 +114,10 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static/'),
 )
 
+
 # Logout redirection
 LOGOUT_REDIRECT_URL = 'login'
+
+
+# Uploaded files
+FILES_DIR = os.path.join(BASE_DIR, 'files')

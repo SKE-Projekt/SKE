@@ -11,16 +11,20 @@
 {% endblock library_js %}
 
 {% block content %}
+<form class="is-hidden" id="hidden-code-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+</form>
+
 <section class="hero sandbox-hero has-text-centered">
     <div class="hero-body sandbox-hero-body">
         <div class="columns">
             <div class="column is-two-thirds-desktop is-full-mobile is-full-tablet">
                 <div id="editor" class="editor"></div>
-
-                {% if current_user.is_authenticated %}
-                <a id="executeCode" href="#" class="button is-success">Uruchom program</a>
+                {% if user.is_authenticated %}
+                    <a id="executeCode" href="" class="button is-success">Uruchom program</a>
                 {% else %}
-                <a href="">Aby skorzystać z sandboxa musisz być zalogowany.</a>
+                    <a href="">Aby skorzystać z sandboxa musisz być zalogowany.</a>
                 {% endif %}
             </div>
             <div id="input-column" class="column is-one-third-desktop is-full-mobile is-full-tablet">
@@ -37,7 +41,6 @@
                         <textarea id="output-data" class="textarea"
                             placeholder="Tutaj pojawi się wyjście twojego programu" readonly></textarea>
                     </div>
-                    <!-- <a href="" id="output-data-show" style="margin-top: 1rem;display: inline-block;">Pokaż</a> -->
                 </div>
             </div>
         </div>
@@ -101,23 +104,24 @@ Print(var, " World!");
 
 <script>
     $('#executeCode').click(function () {
-        var code = mCEditor.getValue("</br>");
-        var input_data = $("#input-data").val().split('\n').join('</br>');
+        var code = mCEditor.getValue();
+        var input_data = $("#input-data").val(); //.split('\n').join('</br>');
 
-        $("#code").val(code);
-        $("#input_data").val(input_data);
-        console.log(input_data);
+        $("#id_source_code").val(code);
+        $("#id_input_code").val(input_data);
 
-        $.post('/sandbox/api/evaluate', $("#hidden-code-form").serialize()).done(function (data) {
-            if (data['code'] != 0) {
-                $("#output-data").val("Twój program nie wykonał się poprawnie:\n" + data['msg']);
+        $.post("{% url 'sandbox_api_submit' %}", $("#hidden-code-form").serialize()).done(function (data) {
+            if (data == "SUCCESS") {
+                console.log(data);
             } else {
-                $("#output-data").val("Twój program wykonał się poprawnie:\n" + data['msg']);
+                console.log("FAIL");
+                console.log(data);
             }
         }).fail(function (data) {
-            console.log(JSON.stringify(data));
-            $("#output-data").val("Twój program nie wykonał się poprawnie:\n" + data['msg']);
+            console.log("WTF");
         });
+
+        return false;
     });
 </script>
 {% endblock scripts %}
