@@ -1,31 +1,158 @@
 {% extends 'SKE/base.html' %}
 
+{% block library_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/codemirror.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/theme/material.min.css" />
+{% endblock library_css %}
+
+{% block library_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/mode/python/python.min.js"></script>
+{% endblock library_js %}
+
 {% block content %}
-<section class="hero" style="max-width: 600px; margin: auto;">
-    {% if user.is_superuser %}
-        <h1 class="title"> {{course.id}}.{{ course.title }} </h1>
-    {% else %}
-        <h1 class="title"> {{course.id}}.{{ course.title }} </h1>
-    {% endif %}
-    <div class="hero-body">
-        {{ course.body_html | safe }}
-    </div>
-</section>
-<section class="section has-text-centered">
-	<h1 class="title">Działy kursu</h1>
-	{% for course_child in course_children %}
-	<div class="box">
-		<a href="{% url 'ViewCourse' course_id=course_child.id %}">{{ course_child.title }}</a>
+<form class="is-hidden" id="submit_exercise_form">
+	{% csrf_token %}
+	{{ exer_form.code }}
+</form>
+
+<<section class="hero has-text-centered">
+	<div class="hero-body">
+		<div class="container">
+			<h1 class="title is-1">
+        		{{ course.title }}
+			</h1>
+
+			{% if course.father_course %}
+				<a href="{% url 'ViewCourse' course_id=course.father_course.id %}">Wróć</a>
+			{% else %}
+				<a href="{% url 'ListCourses' %}">Wróć</a>
+			{% endif %}
+		</div>
 	</div>
-	{% endfor %}
 </section>
 
+<section class="section">
+	<div class="courseBody">
+		{{ course.body_html | safe }}
+	</div>
+</section>
+
+{% if course_children %}
+<section class="section has-text-centered">
+	<h1 class="title">Działy kursu</h1>
+	<ol>
+	{% for course_child in course_children %}
+		<li><a href="{% url 'ViewCourse' course_id=course_child.id %}" class="courseChild">{{ course_child.title }}</a></li>
+	{% endfor %}
+	</ol>
+</section>
+{% endif %}
+
+{% if exercises %}
 <section class="section has-text-centered">
 	<h1 class="title">Ćwiczenia</h1>
 	{% for course_exer in exercises %}
-	<div class="box">
-		<a href="">{{ course_exer.title }}</a>
-	</div>
+		{% include 'SKE_COURSES/_exercise.html' %}
 	{% endfor %}
 </section>
+{% endif %}
 {% endblock content %}
+
+{% block scripts %}
+	<script>
+		var mCEditors = new Array();
+	</script>
+
+	<script>
+		function BeginCodeSubmission(id) {
+			$("#executeCode-" + id).addClass("is-loading");
+			$("#executeCode-" + id).addClass("is-success");
+			$("#executeCode-" + id).removeClass("is-light");
+			$("#executeCode-" + id).removeClass("is-danger");	
+			$("#executeCode-" + id).toggleClass("is-hidden");
+			$("#executeCode-" + id + "-load").toggleClass("is-hidden");
+		}
+
+		function EndCodeSubmission(id) {
+			$("#executeCode-" + id).toggleClass("is-hidden");
+			$("#executeCode-" + id).removeClass("is-loading");
+			$("#executeCode-" + id + "-load").toggleClass("is-hidden");
+		}
+
+		function GetSubmissionResult(id, subm_id) {
+			$.get('/courses/api/check_solve/' + subm_id.toString()).done(function(data) {
+				if (data == "0") {
+					setTimeout(GetSubmissionResult(id, subm_id), 2000);
+				} else {
+					if (data == "4") {
+						$("#executeCode-" + id).addClass("is-light");
+						$("#executeCode-" + id).html("Ćwiczenie zaliczone");
+					} else {
+						$("#executeCode-" + id).addClass("is-danger");
+						$("#executeCode-" + id).addClass("is-light");
+						if (data == "3") {
+							$("#executeCode-" + id).html("Niepoprawny wynik");
+						} else {
+							$("#executeCode-" + id).html("Problem z uruchomieniem");
+						}
+					} 
+					
+					EndCodeSubmission(id);
+				}
+			}).fail(function(data) {
+				$("#executeCode-" + id).addClass("is-danger");
+				$("#executeCode-" + id).addClass("is-light");
+				$("#executeCode-" + id).html("Problem z uruchomieniem");
+				EndCodeSubmission(data);
+			});
+
+			return false;
+		}
+
+		function ExecuteCodeFunction(id) {
+			BeginCodeSubmission(id);
+			var code = mCEditors[parseInt(id) - 1].getValue("</br>");
+			$("#id_code").val(code);
+
+			$.post('/courses/api/solve_exercise/' + id, $("#submit_exercise_form").serialize()).done(function(data) {
+				GetSubmissionResult(id, data);
+				return false;
+			}).fail(function(data) {
+				$("#executeCode-" + id).addClass("is-danger");
+				$("#executeCode-" + id).addClass("is-light");
+				$("#executeCode-" + id).html("Problem z uruchomieniem");
+				EndCodeSubmission(id);
+				return false;
+			});
+		}
+	</script>
+
+	{% for course_exer in exercises %}
+		<script>
+			var editor = document.getElementById("editor-{{course_exer.id}}");
+			$.get('/courses/api/get_start_code/{{course_exer.id}}').done(function(data) {
+				mCEditors.push(CodeMirror(editor, {
+					value: data,
+					mode: "python",
+					lineNumbers: true,
+					theme: "material"
+				}));
+			}).fail(function(data) {
+				mCEditors.push(CodeMirror(editor, {
+					value: `{{ course_exer.start_code }}`,
+					mode: "python",
+					lineNumbers: true,
+					theme: "material"
+				}));
+			});
+		</script>
+
+		<script>
+			$("#executeCode-{{course_exer.id}}").click(function() {
+				ExecuteCodeFunction({{course_exer.id}});
+				return false;
+			});
+		</script>
+	{% endfor %}
+{% endblock scripts %}

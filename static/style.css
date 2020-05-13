@@ -3,11 +3,11 @@
     right: .5rem;
     position: fixed;
     z-index: 11111;
-
 }
 
-.stopa > h5 {
-    font-weight: bold;;
+.stopa>h5 {
+    font-weight: bold;
+    ;
 }
 
 .contact-tiles {
@@ -48,7 +48,6 @@
     max-width: 81vw !important;
     border-radius: 3px !important;
     height: 511px !important;
-
     margin: auto;
 }
 
@@ -58,4 +57,17 @@
     height: 451px !important;
     font-size: .95rem;
     text-align: left;
+}
+
+.courseBody {
+    font-weight: 500;
+    font-size: 1.4rem;
+    max-width: 90vw;
+    max-width: 700px;
+    margin: auto;
+}
+
+.courseChild {
+    font-size: 1.5rem;
+    font-weight: 600;
 }

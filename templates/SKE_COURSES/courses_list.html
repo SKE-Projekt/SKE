@@ -1,9 +1,25 @@
 {% extends 'SKE/base.html' %} {% block content %}
-<section class="hero is-info has-text-centered is-light">
+<section class="has-text-centered is-light">
     <div class="hero-body">
         <h1 class="title is-large" style="font-size: 4rem">Kursy</h1>
     </div>
 </section>
+
+{% for course in courses %}
+<section class="hero has-text-centered is-warning" style="margin: 1rem auto 3rem auto; max-width: 700px; border-radius: 1rem;">
+	<div class="hero-body">
+		<div class="container">
+			<h1 class="title is-1">
+        		{{ course.title }}
+			</h1>
+			<h4 class="subtitle is-6">
+				Opublikowany przez @<b>{{ course.upload.author.username }}</b>
+			</h4>
+			<a href="{% url 'ViewCourse' course_id=course.id %}" class="button is-warning is-light">Otwórz kurs</a>
+		</div>
+	</div>
+</section>
+{% endfor %}
 
 {% if user.is_superuser %}
 <section class="section has-text-centered">
@@ -28,22 +44,7 @@
 </section>
 {% endif %}
 
-{% if courses %}
-<section class="section has-text-centered">
-	<h1 class="title">Dostępne kursy</h1>
-	{% for course in courses %}
-	<div class="box">
-	{% if user.is_superuser %}
-		<a href="{% url 'ViewCourse' course_id=course.id %}">{{course.id}} {{ course.title }}</a>
-    {% else %}
-		<a href="{% url 'ViewCourse' course_id=course.id %}">{{ course.title }}</a>
-    {% endif %}
-	</div>
-	{% endfor %}
-</section>
-{% endif %}
 {% endblock content %}
-
 {% block scripts %}
 <script>
 </script>

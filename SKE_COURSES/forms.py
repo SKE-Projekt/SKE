@@ -8,3 +8,7 @@ class CoursePackageForm(forms.Form):
         super(CoursePackageForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'file-input is-primary'
+
+class ExerciseSubmissionForm(forms.Form):
+    code = forms.CharField(widget=forms.TextInput())
+

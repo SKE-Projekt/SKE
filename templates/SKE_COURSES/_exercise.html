@@ -1,0 +1,25 @@
+<section class="hero sandbox-hero has-text-centered">
+    <div class="hero-body sandbox-hero-body">
+        <h1 class="title">{{ course_exer.title }}</h1>
+        </br>
+        <div class="columns">
+            <div class="column is-two-thirds-desktop is-full-mobile is-full-tablet" style="margin-left: -4rem;">
+                <div id="editor-{{ course_exer.id }}" class="editor"></div>
+            </div>
+            <div id="input-column" class="column is-one-third-desktop is-full-mobile is-full-tablet" style="margin-left: -2rem;">
+                <div class="courseBody has-text-left">
+                    {{ course_exer.body_html | safe }}
+                </div>
+            </div>
+        </div>
+        {% if user.is_authenticated %}
+            <a id="executeCode-{{ course_exer.id }}" href="" class="button is-success is-large">Prześlij rozwiązanie</a>
+            <a id="executeCode-{{ course_exer.id }}-load" href="" class="button is-success is-large is-loading is-hidden">Prześlij rozwiązanie</a>
+            {% comment %} <a id="correctCode-{{ course_exer.id }}" href="" class="button is-success is-light is-large is-hidden">Zaliczone</a> {% endcomment %}
+            {% comment %} </br> {% endcomment %}
+            {% comment %} <a id="incorrectCode-{{ course_exer.id }}" href="" class="button is-danger is-light is-large">Nie zaliczone</a> {% endcomment %}
+        {% else %}
+            <a href="">Aby wysłać ćwiczenie musisz być zalogowany.</a>
+        {% endif %}
+    </div>
+</section>

@@ -5,9 +5,73 @@ import tarfile
 import markdown2
 
 from django.conf import settings
+from celery import shared_task
 
 from . import models
 
+
+def SubmitExerciseSubmission(code, exercise_id, author):
+    code = code.replace('</br>', '\n')
+
+    exer = models.CourseExercise.objects.get(pk=exercise_id)
+    exer_subm = models.ExerciseSubmission(author=author, code=code, exercise=exer)
+    exer_subm.save()
+
+    EvalExerciseSubmission.apply_async(args=(exer_subm.id, None))
+
+    return exer_subm.id
+
+@shared_task
+def EvalExerciseSubmission(exer_subm_id, empty):
+    exer_subm = models.ExerciseSubmission.objects.get(pk=exer_subm_id)
+    try:
+        result = GetEvalExerciseSubmissionResult(exer_subm)
+        if result == 0:
+            exer_subm.result = 4
+        elif result == -1:
+            exer_subm.result = 3
+        else:
+            exer_subm.result = 2
+    except:
+        exer_subm.result = 1
+    exer_subm.save()
+
+def GetEvalExerciseSubmissionResult(exer_subm):
+    course_path = os.path.join(os.path.join(settings.FILES_DIR, 'SKE_COURSES'))
+    exer_path = os.path.join(course_path, exer_subm.exercise.path)
+    exer_subm_path = os.path.join(exer_path, str(exer_subm.special_id))
+
+    os.makedirs(exer_subm_path, exist_ok=True)
+
+    code_path = os.path.join(exer_subm_path, 'source.ed')
+    with open(code_path, 'w+', encoding='utf-8') as f:
+        f.write(exer_subm.code)
+    
+    input_path = os.path.join(exer_path, 'input.in')
+    open(input_path, 'w+', encoding='utf-8') # make sure its there
+    
+    return RunEvalExerciseSubmissionResult(exer_path, exer_subm_path, code_path, input_path)
+
+def RunEvalExerciseSubmissionResult(exer_path, exer_subm_path, code_path, input_path):
+    # Run code
+    outputCodePath = os.path.join(exer_subm_path, 'output.out')
+    run_command = f'timeout --preserve-status 5s {settings.EDLANG_BINARY} {code_path} < {input_path} > {outputCodePath}'
+
+    run_result = os.system(run_command)
+    if run_result != 0:
+        return run_result
+
+    # Check result
+    expected_output_path = os.path.join(exer_path, 'wynik.out')
+    run_command = f'cmp -s {expected_output_path} {outputCodePath}'
+
+    cmp_result = os.system(run_command)
+
+    if cmp_result:
+        return -1;
+    return 0
+
+############################# Course unpacking
 
 def UploadCoursePackage(coursePackageFile, author):
     course_path = os.path.join(os.path.join(settings.FILES_DIR, 'SKE_COURSES'))
@@ -16,7 +80,7 @@ def UploadCoursePackage(coursePackageFile, author):
     courseUpload = models.CourseUpload(author=author, path=package_path, result=0)
     courseUpload.save()
 
-    # GEN COURSE FROM PACKAGE
+    # GEN COURSE FROM PACKAGE - MAKE IT CELERY
     UploadCoursePackageCelery(course_path, package_path, courseUpload.id)
 
 
