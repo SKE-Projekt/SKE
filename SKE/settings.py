@@ -127,4 +127,4 @@ FILES_DIR = os.path.join(BASE_DIR, 'files')
 
 # Edlang Binary
 
-EDLANG_BINARY = os.path.join(BASE_DIR, os.path.normpath('../Edlang/bin/edlang.exe'))
+EDLANG_BINARY = os.path.join(BASE_DIR, os.path.normpath('../Edlang/bin/edlang'))

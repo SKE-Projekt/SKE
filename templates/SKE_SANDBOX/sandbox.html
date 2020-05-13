@@ -103,7 +103,54 @@ Print(var, " World!");
 </script>
 
 <script>
+    function beginSubmissionUpload() {
+        $('#executeCode').toggleClass('is-hidden');
+        $('#output-data').parent().toggleClass('is-loading');
+    }
+
+    function endSubmissionUpload() {
+        $('#executeCode').toggleClass('is-hidden');
+        $('#output-data').parent().toggleClass('is-loading');
+    }
+
+    function getSandboxSubmissionOutput(id) {
+        output_code = $.get('/sandbox/api/get_output/' + id).done(function(data) {
+            preval = $("#output-data").val() + '\n'
+            $("#output-data").val(preval + data);
+        }).fail(function(data) {
+            $("#output-data").val('[ NIE MOŻNA ODZYSKAĆ WYJŚCIA PROGRAMU ]');
+        });
+        endSubmissionUpload();
+    }
+
+    function getSandboxSubmissionResult(id) {
+        console.log(id);
+
+        $.get('/sandbox/api/get_result/' + id, function(data) {}).done(function(data) {
+            result_code = data;
+            if (result_code == "3" || result_code == "2") {
+                if (result_code == "3")
+                    $("#output-data").val('[ PROGRAM WYKONAŁ SIĘ POPRAWNIE ]');
+                else
+                    $("#output-data").val('[ PROGRAM NIE WYKONAŁ SIĘ POPRAWNIE ]');
+                getSandboxSubmissionOutput(id);
+                return false;
+            } else if (result_code == "0") {
+                setTimeout(getSandboxSubmissionResult(id), 1000);
+                return false;
+            } else {
+                $("#output-data").val('[ NIE UDAŁO SIĘ SPRAWDZIĆ ROZWIĄZANIA ]');
+            }
+            endSubmissionUpload();
+        }).fail(function() {
+            $("#output-data").val('[ NIE UDAŁO SIĘ SPRAWDZIĆ ROZWIĄZANIA ]');
+            endSubmissionUpload();
+        });
+    }
+
     $('#executeCode').click(function () {
+        beginSubmissionUpload();
+
         var code = mCEditor.getValue("</br>");
         var input_data = $("#input-data").val().split('\n').join('</br>');
 
@@ -113,13 +160,22 @@ Print(var, " World!");
         $.post("{% url 'sandbox_api_submit' %}", $("#hidden-code-form").serialize()).done(function (data) {
             if (data != "ERROR") {
                 console.log(data);
+                id = data.split(':')[1]
+
+                setTimeout(getSandboxSubmissionResult(id), 500);
             } else {
                 console.log("FAIL");
                 console.log(data);
+                $("#output-data").val('[ NIE UDAŁO SIĘ PRZESŁAĆ ROZWIĄZANIA ]');
+
+                endSubmissionUpload();
             }
         }).fail(function (data) {
             console.log("WTF");
             console.log(data);
+            $("#input-data").val('[ NIEPOPRAWNY FORMAT ROZWIĄZANIA ]');
+
+            endSubmissionUpload();
         });
 
         return false;

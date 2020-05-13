@@ -21,7 +21,7 @@ def checkSandboxSubmissionTask(source_code, input_code, author):
         sandboxSubmission.result = 1
         sandboxSubmission.save()
 
-    return sandboxSubmission.special_id
+    return sandboxSubmission.id
 
 def genSandboxSubmissionFolder(source_code, input_code, special_id):
     sandboxSubmissionPath = os.path.join(os.path.join(settings.FILES_DIR, 'SKE_SANDBOX'), str(special_id))
