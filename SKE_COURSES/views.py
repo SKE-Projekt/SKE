@@ -52,4 +52,4 @@ def GetStartCodeForExercise(request, id):
 
     if exer_subms != None:
         return HttpResponse(exer_subms.code)
-    return HttpResponseBadRequest()
+    return HttpResponseBadRequest("NONE")

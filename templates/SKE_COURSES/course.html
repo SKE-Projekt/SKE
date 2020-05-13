@@ -61,7 +61,7 @@
 
 {% block scripts %}
 	<script>
-		var mCEditors = new Array();
+		var mCEditors = {};
 	</script>
 
 	<script>
@@ -100,11 +100,13 @@
 					
 					EndCodeSubmission(id);
 				}
+				return false;
 			}).fail(function(data) {
 				$("#executeCode-" + id).addClass("is-danger");
 				$("#executeCode-" + id).addClass("is-light");
 				$("#executeCode-" + id).html("Problem z uruchomieniem");
 				EndCodeSubmission(data);
+				return false;
 			});
 
 			return false;
@@ -112,7 +114,7 @@
 
 		function ExecuteCodeFunction(id) {
 			BeginCodeSubmission(id);
-			var code = mCEditors[parseInt(id) - 1].getValue("</br>");
+			var code = mCEditors[id].getValue("</br>");
 			$("#id_code").val(code);
 
 			$.post('/courses/api/solve_exercise/' + id, $("#submit_exercise_form").serialize()).done(function(data) {
@@ -125,26 +127,35 @@
 				EndCodeSubmission(id);
 				return false;
 			});
+
+			return false;
 		}
 	</script>
 
 	{% for course_exer in exercises %}
 		<script>
-			var editor = document.getElementById("editor-{{course_exer.id}}");
+			var editor_{{course_exer.id}} = document.getElementById("editor-{{course_exer.id}}");
 			$.get('/courses/api/get_start_code/{{course_exer.id}}').done(function(data) {
-				mCEditors.push(CodeMirror(editor, {
-					value: data,
-					mode: "python",
-					lineNumbers: true,
-					theme: "material"
-				}));
+					mCEditors[{{course_exer.id}}] = CodeMirror(editor_{{course_exer.id}}, {
+						value: data,
+						mode: "python",
+						lineNumbers: true,
+						theme: "material"
+					});
+					$("#executeCode-{{course_exer.id}}").addClass("is-light");
+					$("#executeCode-{{course_exer.id}}").html("Ćwiczenie zaliczone");
+				return false;
 			}).fail(function(data) {
-				mCEditors.push(CodeMirror(editor, {
+				console.log("PUSHUJE TO");
+
+				mCEditors[{{course_exer.id}}] = CodeMirror(editor_{{course_exer.id}}, {
 					value: `{{ course_exer.start_code }}`,
-					mode: "python",
-					lineNumbers: true,
-					theme: "material"
-				}));
+						mode: "python",
+						lineNumbers: true,
+						theme: "material"
+					});
+
+				return false;
 			});
 		</script>
 
