@@ -1,0 +1,50 @@
+{% extends 'SKE/base.html' %} {% block content %}
+<section class="hero is-info has-text-centered is-light">
+    <div class="hero-body">
+        <h1 class="title is-large" style="font-size: 4rem">Kursy</h1>
+    </div>
+</section>
+
+{% if user.is_superuser %}
+<section class="section has-text-centered">
+    <h1 class="title">Wgraj nowy kurs</h1>
+    <form class="form" action="/courses/api/upload_package/" method="POST" id="course-upload-form" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="file" style="display: inline-block;">
+            <label class="file-label">
+              {{ form.course_package_file }}
+              <span class="file-cta">
+                <span class="file-icon">
+                  <i class="fas fa-upload"></i>
+                </span>
+                <span class="file-label">
+                  Wybierz plik z paczką
+                </span>
+              </span>
+            </label>
+        </div>
+        <button type="submit" class="button is-info"> Wgraj </button>
+    </form>
+</section>
+{% endif %}
+
+{% if courses %}
+<section class="section has-text-centered">
+	<h1 class="title">Dostępne kursy</h1>
+	{% for course in courses %}
+	<div class="box">
+	{% if user.is_superuser %}
+		<a href="{% url 'ViewCourse' course_id=course.id %}">{{course.id}} {{ course.title }}</a>
+    {% else %}
+		<a href="{% url 'ViewCourse' course_id=course.id %}">{{ course.title }}</a>
+    {% endif %}
+	</div>
+	{% endfor %}
+</section>
+{% endif %}
+{% endblock content %}
+
+{% block scripts %}
+<script>
+</script>
+{% endblock scripts %}

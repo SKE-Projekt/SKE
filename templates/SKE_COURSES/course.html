@@ -1,0 +1,31 @@
+{% extends 'SKE/base.html' %}
+
+{% block content %}
+<section class="hero" style="max-width: 600px; margin: auto;">
+    {% if user.is_superuser %}
+        <h1 class="title"> {{course.id}}.{{ course.title }} </h1>
+    {% else %}
+        <h1 class="title"> {{course.id}}.{{ course.title }} </h1>
+    {% endif %}
+    <div class="hero-body">
+        {{ course.body_html | safe }}
+    </div>
+</section>
+<section class="section has-text-centered">
+	<h1 class="title">Działy kursu</h1>
+	{% for course_child in course_children %}
+	<div class="box">
+		<a href="{% url 'ViewCourse' course_id=course_child.id %}">{{ course_child.title }}</a>
+	</div>
+	{% endfor %}
+</section>
+
+<section class="section has-text-centered">
+	<h1 class="title">Ćwiczenia</h1>
+	{% for course_exer in exercises %}
+	<div class="box">
+		<a href="">{{ course_exer.title }}</a>
+	</div>
+	{% endfor %}
+</section>
+{% endblock content %}

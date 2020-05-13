@@ -27,7 +27,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'SKE_USERS',
-    'SKE_SANDBOX'
+    'SKE_SANDBOX',
+    'SKE_COURSES',
 ]
 
 MIDDLEWARE = [
