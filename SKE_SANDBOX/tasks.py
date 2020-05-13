@@ -1,6 +1,7 @@
 import os
 
 from django.conf import settings
+from celery import shared_task
 
 from . import models
 
@@ -8,6 +9,14 @@ from . import models
 def checkSandboxSubmissionTask(source_code, input_code, author):
     sandboxSubmission = models.SandboxSubmission(author=author)
     sandboxSubmission.save()
+
+    checkSandboxSubmissionCeleryTask.apply_async(args=(source_code, input_code, sandboxSubmission.id))
+    
+    return sandboxSubmission.id
+
+@shared_task
+def checkSandboxSubmissionCeleryTask(source_code, input_code, id):
+    sandboxSubmission = models.SandboxSubmission.objects.get(pk=id)
 
     try:
         return_code = genSandboxSubmissionFolder(source_code, input_code, sandboxSubmission.special_id)
@@ -20,8 +29,6 @@ def checkSandboxSubmissionTask(source_code, input_code, author):
         print('ERROR: ', e)
         sandboxSubmission.result = 1
         sandboxSubmission.save()
-
-    return sandboxSubmission.id
 
 def genSandboxSubmissionFolder(source_code, input_code, special_id):
     sandboxSubmissionPath = os.path.join(os.path.join(settings.FILES_DIR, 'SKE_SANDBOX'), str(special_id))
@@ -39,7 +46,7 @@ def genSandboxSubmissionFolder(source_code, input_code, special_id):
 
 def runSandboxSubmission(sandboxSubmissionPath, sourceCodePath, inputCodePath, special_id):
     outputCodePath = os.path.join(sandboxSubmissionPath, 'output.out')
-    run_command = f'{settings.EDLANG_BINARY} {sourceCodePath} < {inputCodePath} > {outputCodePath}'
+    run_command = f'timeout --preserve-status 5s {settings.EDLANG_BINARY} {sourceCodePath} < {inputCodePath} > {outputCodePath}'
     print(run_command)
 
     return os.system(run_command)
