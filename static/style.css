@@ -71,3 +71,14 @@
     font-size: 1.5rem;
     font-weight: 600;
 }
+
+.contest-level {
+    margin: 3rem;
+}
+
+.no-contest-title {
+    text-align: center;
+    font-family: monospace;
+    font-size: 2rem !important;
+    color: #aeaeae !important;
+}

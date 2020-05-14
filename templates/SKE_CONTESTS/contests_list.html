@@ -1,0 +1,120 @@
+{% extends 'SKE/base.html' %}
+
+{% block content %}
+
+<section class="hero is-warning">
+    <div class="hero-body">
+        <h1 class="title">Aktualne konkursy</h1>
+    </div>
+</section>
+<section class="section">
+{% if active_contests %}
+    {% for contest in active_contests %}
+        <nav class="level contest-level">
+            <div class="level-item has-text-centered is-disabled">
+                <div>
+                <p class="title">{{ contest.title }}</p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered">
+                <div>
+                <p class="heading">Trwa do</p>
+                <p class="title">{{ contest.date_end }}</p>
+                </div>
+            </div>
+            {% comment %} <div class="level-item has-text-centered">
+                <div>
+                <p class="heading">Zarejestrowanych</p>
+                <p class="title">0</p>
+                </div>
+            </div> {% endcomment %}
+            <div class="level-item has-text-centered">
+                <div>
+                    <a href="" class="button is-warning"><b>Przejdź do konkursu</b></a>
+                </div>
+            </div>
+        </nav>
+    {% endfor %}
+{% else %}
+    <h1 class="title no-contest-title">[ Brak konkursów do wyświetlenia ]</h1>
+    <h1 class="subtitle no-contest-title">:(</h1>
+{% endif %}
+</section>
+<section class="hero is-danger">
+    <div class="hero-body">
+        <h1 class="title">Zaplanowane konkursy</h1>
+    </div>
+</section>
+<section class="section">
+{% if future_contests %}
+    {% for contest in future_contests %}
+        <nav class="level contest-level is-disabled">
+            <div class="level-item has-text-centered is-disabled">
+                <div>
+                <p class="title">{{ contest.title }}</p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered">
+                <div>
+                <p class="heading">Trwa do</p>
+                <p class="title">{{ contest.date_end }}</p>
+                </div>
+            </div>
+            {% comment %} <div class="level-item has-text-centered">
+                <div>
+                <p class="heading">Zarejestrowanych</p>
+                <p class="title">0</p>
+                </div>
+            </div> {% endcomment %}
+            <div class="level-item has-text-centered">
+                <div>
+                    <a href="" class="button is-danger is-light"><b>Konkurs nie jest dostępny</b></a>
+                </div>
+            </div>
+        </nav>
+    {% endfor %}
+{% else %}
+    <h1 class="title no-contest-title">[ Brak konkursów do wyświetlenia ]</h1>
+    <h1 class="subtitle no-contest-title">:(</h1>
+{% endif %}
+</section>
+<section class="hero is-info">
+    <div class="hero-body">
+        <h1 class="title">Zarchiwizowane konkursy</h1>
+    </div>
+</section>
+<section class="section">
+{% if past_contests %}
+    {% for contest in past_contests %}
+        <nav class="level contest-level is-disabled">
+            <div class="level-item has-text-centered is-disabled">
+                <div>
+                <p class="title">{{ contest.title }}</p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered">
+                <div>
+                <p class="heading">Trwa do</p>
+                <p class="title">{{ contest.date_end }}</p>
+                </div>
+            </div>
+            {% comment %} <div class="level-item has-text-centered">
+                <div>
+                <p class="heading">Zarejestrowanych</p>
+                <p class="title">0</p>
+                </div>
+            </div> {% endcomment %}
+            <div class="level-item has-text-centered">
+                <div>
+                    <a href="" class="button is-info is-light"><b>Przejdź do konkursu</b></a>
+                </div>
+            </div>
+        </nav>
+    {% endfor %}
+{% else %}
+    <h1 class="title no-contest-title">[ Brak konkursów do wyświetlenia ]</h1>
+    <h1 class="subtitle no-contest-title">:(</h1>
+{% endif %}
+</section>
+
+{% endblock content %}

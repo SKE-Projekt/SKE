@@ -11,6 +11,11 @@ class Contest(models.Model):
     date_end = models.DateTimeField()
     body = models.TextField(max_length=1024*24)
 
+    is_active = models.BooleanField()
+
+class UserContestProfile(models.Model):
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    contest = models.ForeignKey(Contest, on_delete=models.CASCADE)
 
 class ContestNotification(models.Model):
     title = models.CharField(max_length=256)
