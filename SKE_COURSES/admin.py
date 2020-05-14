@@ -6,3 +6,5 @@ from . import models
 admin.site.register(models.Course)
 admin.site.register(models.CourseUpload)
 admin.site.register(models.CourseExercise)
+admin.site.register(models.ExerciseSubmission)
+admin.site.register(models.ExerciseExampleShowing)

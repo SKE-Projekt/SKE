@@ -30,6 +30,13 @@ class CourseExercise(models.Model):
     body_md = models.TextField(max_length=24 * 1024)
     body_html = models.TextField(max_length=48 * 1024, blank=True)
 
+    def get_example(self):
+        courses_path = os.path.join(settings.FILES_DIR, 'SKE_COURSES')
+        exer_path = os.path.join(courses_path, self.path)
+        exer_example_path = os.path.join(exer_path, 'przyklad.ed')
+        with open(exer_example_path, 'r+', encoding='utf-8') as f:
+            return f.read()
+
 class ExerciseSubmission(models.Model):
     RESULT = (
         (0, 'NIE SPRAWDZONO'),
@@ -47,6 +54,13 @@ class ExerciseSubmission(models.Model):
 
     author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, editable=False)
     result = models.IntegerField(default=0, choices=RESULT)
+
+class ExerciseExampleShowing(models.Model):
+    author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    exercise = models.ForeignKey(CourseExercise, on_delete=models.CASCADE)
+
+    date = models.DateTimeField(auto_now_add=True)
+
 
 # class SandboxSubmission(models.Model):
 #     RESULT = (

@@ -104,7 +104,7 @@
 			}).fail(function(data) {
 				$("#executeCode-" + id).addClass("is-danger");
 				$("#executeCode-" + id).addClass("is-light");
-				$("#executeCode-" + id).html("Problem z uruchomieniem");
+				$("#executeCode-" + id).html("Problem z serwerem");
 				EndCodeSubmission(data);
 				return false;
 			});
@@ -123,7 +123,7 @@
 			}).fail(function(data) {
 				$("#executeCode-" + id).addClass("is-danger");
 				$("#executeCode-" + id).addClass("is-light");
-				$("#executeCode-" + id).html("Problem z uruchomieniem");
+				$("#executeCode-" + id).html("Problem z serwerem");
 				EndCodeSubmission(id);
 				return false;
 			});
@@ -146,8 +146,6 @@
 					$("#executeCode-{{course_exer.id}}").html("Ćwiczenie zaliczone");
 				return false;
 			}).fail(function(data) {
-				console.log("PUSHUJE TO");
-
 				mCEditors[{{course_exer.id}}] = CodeMirror(editor_{{course_exer.id}}, {
 					value: `{{ course_exer.start_code }}`,
 						mode: "python",
@@ -155,6 +153,20 @@
 						theme: "material"
 					});
 
+				return false;
+			});
+		</script>
+
+		<script>
+			$("#show_example-{{course_exer.id}}").click(function() {
+				$.get("/courses/api/get_example/{{course_exer.id}}").done(function(data) {
+					mCEditors[{{course_exer.id}}].setValue(data);
+					$("#show_example_div-{{course_exer.id}}").addClass("is-hidden");
+					$("#show_example_div_success-{{course_exer.id}}").removeClass("is-hidden");
+				}).fail(function(data) {
+					$("#show_example_div-{{course_exer.id}}").addClass("is-hidden");
+					$("#show_example_div_error-{{course_exer.id}}").removeClass("is-hidden");
+				});
 				return false;
 			});
 		</script>

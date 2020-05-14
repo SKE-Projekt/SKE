@@ -5,6 +5,22 @@
         <div class="columns">
             <div class="column is-two-thirds-desktop is-full-mobile is-full-tablet" style="margin-left: -4rem;">
                 <div id="editor-{{ course_exer.id }}" class="editor"></div>
+                {% if user.is_authenticated %}
+                    <div style="margin-top: -1rem;" id="show_example_div-{{course_exer.id}}">
+                        <p> Problem z rozwiązaniem zadania? </p>
+                        <a id="show_example-{{course_exer.id}}" href="">Kliknij aby zobaczyć poprawne rozwiązanie</a>
+                    </div>
+                    <div style="" id="show_example_div_error-{{course_exer.id}}" class="is-hidden">
+                        <p class="button is-danger is-light">
+                            Nie udało się uzyskać rozwiązania z serwera
+                        </p>
+                    </div>
+                    <div style="" id="show_example_div_success-{{course_exer.id}}" class="is-hidden">
+                        <p class="button is-success is-light">
+                            Poprawnie wczytano rozwiązanie z serwera
+                        </p>
+                    </div>
+                {% endif %}
             </div>
             <div id="input-column" class="column is-one-third-desktop is-full-mobile is-full-tablet" style="margin-left: -2rem;">
                 <div class="courseBody has-text-left">

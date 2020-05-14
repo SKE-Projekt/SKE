@@ -48,8 +48,20 @@ def GetExerciseSubmissionResult(request, id):
 
 def GetStartCodeForExercise(request, id):
     exer = get_object_or_404(models.CourseExercise, pk=id)
-    exer_subms = models.ExerciseSubmission.objects.filter(exercise=exer, author=request.user).last()
+    exer_subms = models.ExerciseSubmission.objects.filter(exercise=exer, author=request.user, result=4).last()
 
     if exer_subms != None:
         return HttpResponse(exer_subms.code)
     return HttpResponseBadRequest("NONE")
+
+def GetExampleCodeForExercise(request, id):
+    if request.user.is_authenticated:
+        exer = get_object_or_404(models.CourseExercise, pk=id)
+        exer_exampl_look = models.ExerciseExampleShowing(author=request.user, exercise=exer)
+        exer_exampl_look.save()
+        try:
+            return HttpResponse(exer.get_example())
+        except:
+            pass
+    return HttpResponseBadRequest()
+
