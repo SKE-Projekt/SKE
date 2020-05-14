@@ -7,7 +7,6 @@
 
 .stopa>h5 {
     font-weight: bold;
-    ;
 }
 
 .contact-tiles {
@@ -76,9 +75,39 @@
     margin: 3rem;
 }
 
+.contest-body {
+    width: 70%;
+    margin: auto;
+}
+
 .no-contest-title {
+    margin: 2rem;
     text-align: center;
     font-family: monospace;
     font-size: 2rem !important;
     color: #aeaeae !important;
+}
+
+.task-link {
+    display: block;
+    font-size: 1.32rem;
+    color: black;
+    text-align: center;
+    font-weight: 500;
+    margin: 1rem;
+    background: #efefee;
+    padding: .5rem 0;
+    border-radius: .3rem;
+}
+
+.task-link.success {
+    background: #2ecc71;
+}
+
+.task-link.error {
+    background: #e74c3c;
+}
+
+.task-link.not-success {
+    background: #e67e22;
 }

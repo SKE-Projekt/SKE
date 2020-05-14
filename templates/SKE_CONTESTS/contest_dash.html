@@ -1,0 +1,80 @@
+{% extends 'SKE/base.html' %}
+
+{% block content %}
+<section class="section">
+    <div class="columns">
+        <div class="column is-two-thirds">
+            <h1 class="title has-text-centered">
+                {{ contest.title }}
+            </h1>
+
+            <br>
+            <div class="contest-body">
+            {{ contest.body | safe }}
+            </div>
+            <br>
+
+            <div class="contest-submissions">
+                <h1 class="title">Przesłane zgłoszenia</h1>
+                {% if submissions %}
+                {% else %}
+                    <h1 class="title no-contest-title">[ Brak zgłoszeń do wyświetlenia ]</h1>
+                {% endif %}
+            </div>
+
+            <div class="contest-messages">
+                <h1 class="title">Powiadomienia</h1>
+                {% if cont_notifis %}
+                {% else %}
+                    <h1 class="title no-contest-title">[ Brak powiadomień do wyświetlenia ]</h1>
+                {% endif %}
+            </div>
+        </div>
+        <div class="column">
+            <div class="contest-task-list">
+                <h1 class="subtitle"> Zadania konkursowe </h1>
+                {% if tasks %}
+                    {% for task in tasks %}
+                        <a href="{% url 'TaskDashboard' id=task.id %}" class="task-link">{{ task.title }}_{{task.ord_id}}</a>
+                    {% endfor %}
+                {% else %}
+                    </br>
+                    <h1 class="title no-contest-title">[ Brak zadań do wyświetlenia ]</h1>
+                {% endif %}
+
+                {% if user.is_superuser %}
+                    <section class="section has-text-centered">
+                        <h1 class="title">Wgraj nowe zadanie</h1>
+                        <form class="form" action="{% url 'UploadContestTaskPackage' id=contest.id %}" method="POST" id="course-upload-form" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="file" style="display: inline-block;">
+                                <label class="file-label">
+                                {{ form.package_file }}
+                                <span class="file-cta">
+                                    <span class="file-icon">
+                                    <i class="fas fa-upload"></i>
+                                    </span>
+                                    <span class="file-label">
+                                    Wybierz plik z paczką
+                                    </span>
+                                </span>
+                                </label>
+                            </div>
+                            <button type="submit" class="button is-warning"> Wgraj </button>
+                        </form>
+                    </section>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if ranking %}
+<section class="hero is-warning has-text-centered">
+    <div class="hero-body">
+        <h1 class="title">Ranking</h1>
+    </div>
+</section>
+{% include 'SKE_CONTEST/_ranking.html' %}
+{% endif %}
+{% endblock content %}

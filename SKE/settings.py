@@ -125,6 +125,7 @@ LOGOUT_REDIRECT_URL = 'login'
 # Uploaded files
 
 FILES_DIR = os.path.join(BASE_DIR, 'files')
+CONTESTS_DIR = os.path.join(FILES_DIR, 'SKE_CONTESTS')
 
 
 # Edlang Binary
