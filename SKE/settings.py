@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'SKE_USERS',
     'SKE_SANDBOX',
     'SKE_COURSES',
+    'SKE_CONTESTS',
 ]
 
 MIDDLEWARE = [
