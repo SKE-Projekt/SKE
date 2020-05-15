@@ -1,0 +1,37 @@
+{% extends 'SKE/base.html' %}
+
+
+{% block content %}
+<section class="section">
+    <form class="form" method="POST" style="max-width: 400px; margin: auto;">
+        {% csrf_token %}
+        <div class="field">
+  <label class="label">Email</label>
+  <div class="control has-icons-left has-icons-right">
+        {{ form.email }}
+    <span class="icon is-small is-left">
+      <i class="fas fa-envelope"></i>
+    </span>
+  </div>
+</div>
+    <button type="submit" class="button is-primary">Dodaj token</button>
+    </form>
+</section>
+
+<section class="section">
+    <h1 class="title">
+        Aktywne tokeny
+    </h1>
+    {% for token in atokens %}
+        {% include 'SKE_USERS/_token.html' %}
+    {% endfor %}
+</section>
+<section class="section">
+    <h1 class="title">
+        Zużyte tokeny
+    </h1>
+    {% for token in ntokens %}
+        {% include 'SKE_USERS/_token.html' %}
+    {% endfor %}
+</section>
+{% endblock content %}

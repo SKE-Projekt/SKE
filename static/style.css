@@ -162,3 +162,17 @@
     padding: 0 2rem;
     font-family: monospace;
 }
+
+.token-div {
+    margin: 2rem;
+    background-color: #efefee;
+    padding: 1rem 1.5rem;
+}
+
+.token-div.True {
+    background-color: rgba(46, 204, 112, 0.7);
+}
+
+.token-div>h5 {
+    font-size: 1.2rem;
+}

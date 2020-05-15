@@ -1,9 +1,52 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.core.mail import send_mail
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
+from django.conf import settings
+from django.http import HttpResponseForbidden
+from django.template.loader import render_to_string
 
 from . import forms
+from . import models
 
+
+def InvTokenView(request):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden()
+    
+    if request.method == "POST":
+        form = forms.InvitationTokenForm(request.POST)
+
+        if form.is_valid():
+            new_token = models.InvitationToken(email=form.cleaned_data['email'])
+            new_token.save()
+            messages.add_message(request, messages.SUCCESS, 'Dodano token zaproszeniowy', 'is-success')
+        else:
+            messages.add_message(request, messages.ERROR, 'Niepoprawne dane', 'is-danger')
+    else:
+        form = forms.InvitationTokenForm()
+    active_tokens = models.InvitationToken.objects.filter(active=True)
+    nactive_tokens = models.InvitationToken.objects.filter(active=False)
+    return render(request, 'SKE_USERS/inv_tokens.html', context={'form': form, 'atokens': active_tokens, 'ntokens': nactive_tokens})
+
+def SendTokenView(request, id):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden()
+    try:
+        token = get_object_or_404(models.InvitationToken, pk=id)
+        token.sent = True
+
+        subject = "Udział w testach platformy konkursowej SKE"
+        recepient = token.email
+        message = render_to_string('SKE_USERS/token_inv.html', context={'token': token})
+        send_mail(subject, "", "SKE Projekt <skeprojekt@gmail.com>", [recepient], fail_silently=False, html_message=message)
+
+        token.save()
+        messages.add_message(request, messages.SUCCESS, 'Wysłano zaproszenie', 'is-success')
+    except Exception as e:
+        print("[ERROR]", e, "[END_EMAIL_ERROR]")
+        messages.add_message(request, messages.ERROR, 'Błąd podczas wysyłania', 'is-danger')
+    return redirect('tokens')
 
 def LoginView(request):
     loginForm = forms.LoginForm()

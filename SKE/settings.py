@@ -138,3 +138,12 @@ EDLANG_BINARY = os.path.join(BASE_DIR, os.path.normpath('../Edlang/bin/edlang'))
 # Celery
 
 CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
+
+# Sending emails:
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'skeprojekt@gmail.com'
+EMAIL_HOST_PASSWORD = 'futureEd/123'

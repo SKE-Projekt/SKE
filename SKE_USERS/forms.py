@@ -9,3 +9,12 @@ class LoginForm(forms.Form):
         super(LoginForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'input is-primary'
+
+class InvitationTokenForm(forms.Form):
+    email = forms.EmailField()
+
+    
+    def __init__(self, *args, **kwargs):
+        super(InvitationTokenForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'input is-primary'

@@ -1,0 +1,11 @@
+<div class="token-div {{ token.sent }}" style="display: inline-block;">
+    <h4>MAIL: <b>{{ token.email }}</b></h4>
+    <h5>KOD: <b>{{ token.value }}</b></h5>
+
+    {% if token.active %}
+    <div class="has-text-centered">
+        </br>
+        <a href="/user/api/send_inv/{{token.id}}" class="button is-warning">Wyślij zaproszenie</a> 
+    </div>   
+    {% endif %}
+</div>
