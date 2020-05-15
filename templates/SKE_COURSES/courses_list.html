@@ -6,7 +6,7 @@
 </section>
 
 {% for course in courses %}
-<section class="hero has-text-centered is-warning" style="margin: 1rem auto 3rem auto; max-width: 1000px; border-radius: 1rem;">
+<section class="hero has-text-centered" style="margin: 1rem auto 3rem auto; max-width: 1000px; border-radius: 1rem;">
 	<div class="hero-body">
 		<div class="container">
 			<h1 class="title is-1">
@@ -15,7 +15,7 @@
 			<h4 class="subtitle is-6">
 				Opublikowany przez @<b>{{ course.upload.author.username }}</b>
 			</h4>
-			<a href="{% url 'ViewCourse' course_id=course.id %}" class="button is-warning is-light">Otwórz kurs</a>
+			<a href="{% url 'ViewCourse' course_id=course.id %}" class="button is-info is-light is-large">Otwórz kurs</a>
 		</div>
 	</div>
 </section>
