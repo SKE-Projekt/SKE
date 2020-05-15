@@ -58,11 +58,14 @@
     text-align: left;
 }
 
+
+/* KURSY */
+
 .courseBody {
     font-weight: 500;
     font-size: 1.4rem;
     max-width: 90vw;
-    max-width: 700px;
+    max-width: 900px;
     margin: auto;
 }
 
@@ -70,6 +73,32 @@
     font-size: 1.5rem;
     font-weight: 600;
 }
+
+.courseBody {
+    margin-top: -4rem;
+}
+
+.courseBody>p {
+    margin: 2rem;
+}
+
+.exerBody {
+    font-size: 1.4rem;
+}
+
+.exerBody {
+    font-weight: 500;
+    margin-top: -2rem;
+    max-width: 100vw;
+    max-width: 1000px;
+}
+
+.exerBody>p {
+    margin: 1rem;
+}
+
+
+/* KURSY */
 
 .contest-level {
     margin: 3rem;

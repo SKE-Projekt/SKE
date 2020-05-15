@@ -50,7 +50,11 @@ def GetEvalExerciseSubmissionResult(exer_subm):
         f.write(exer_subm.code)
     
     input_path = os.path.join(exer_path, 'input.in')
-    open(input_path, 'w+', encoding='utf-8') # make sure its there
+    try:
+        open(input_path, 'r+', encoding='utf-8')
+    except Exception as e:
+        print('[ERROR]', e, '[END_INPUT_ERROR]')
+        open(input_path, 'w+', encoding='utf-8') # make sure its there
     
     return RunEvalExerciseSubmissionResult(exer_path, exer_subm_path, code_path, input_path)
 

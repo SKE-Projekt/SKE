@@ -16,7 +16,7 @@
 	{{ exer_form.code }}
 </form>
 
-<<section class="hero has-text-centered">
+<<section class="hero has-text-centered course-title">
 	<div class="hero-body">
 		<div class="container">
 			<h1 class="title is-1">
@@ -56,6 +56,11 @@
 		{% include 'SKE_COURSES/_exercise.html' %}
 	{% endfor %}
 </section>
+{% else %}
+<br>
+<br>
+<br>
+<br>
 {% endif %}
 {% endblock content %}
 

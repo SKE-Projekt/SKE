@@ -3,7 +3,7 @@
         <h1 class="title">{{ course_exer.title }}</h1>
         </br>
         <div class="columns">
-            <div class="column is-two-thirds-desktop is-full-mobile is-full-tablet" style="margin-left: -4rem;">
+            <div class="column is-half-desktop is-full-mobile is-full-tablet">
                 <div id="editor-{{ course_exer.id }}" class="editor"></div>
                 {% if user.is_authenticated %}
                     <div style="margin-top: -1rem;" id="show_example_div-{{course_exer.id}}">
@@ -22,8 +22,8 @@
                     </div>
                 {% endif %}
             </div>
-            <div id="input-column" class="column is-one-third-desktop is-full-mobile is-full-tablet" style="margin-left: -2rem;">
-                <div class="courseBody has-text-left">
+            <div id="input-column" class="column is-half-desktop is-full-mobile is-full-tablet">
+                <div class="exerBody has-text-left">
                     {{ course_exer.body_html | safe }}
                 </div>
             </div>
