@@ -92,6 +92,10 @@
 String var = "Hello";
 Print(var, " World!");
 `;
+    {% if code %}
+        test_value = `{{code|safe}}`;
+    {% endif %}
+
 
     var editor = document.getElementById("editor");
     var mCEditor = CodeMirror(editor, {
@@ -136,7 +140,7 @@ Print(var, " World!");
                 getSandboxSubmissionOutput(id);
                 return false;
             } else if (result_code == "0") {
-                setTimeout(getSandboxSubmissionResult(id), 1000);
+                setTimeout(getSandboxSubmissionResult(id), 2000);
                 return false;
             } else {
                 $("#output-data").val('[ NIE UDAŁO SIĘ SPRAWDZIĆ ROZWIĄZANIA ]');
@@ -162,7 +166,7 @@ Print(var, " World!");
                 console.log(data);
                 id = data.split(':')[1]
 
-                setTimeout(getSandboxSubmissionResult(id), 500);
+                setTimeout(getSandboxSubmissionResult(id), 2000);
             } else {
                 console.log("FAIL");
                 console.log(data);

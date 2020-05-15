@@ -24,4 +24,11 @@ class SandboxSubmission(models.Model):
         outputPath = os.path.join(os.path.join(settings.FILES_DIR, 'SKE_SANDBOX'), str(self.special_id))
         with open(os.path.join(outputPath, 'output.out'), 'r+', encoding='utf-8') as f:
             output_code = f.read()
+        os.system(f"rm {os.path.join(outputPath, 'output.out')}")
         return output_code
+    
+    def get_code(self):
+        codePath = os.path.join(os.path.join(settings.FILES_DIR, 'SKE_SANDBOX'), str(self.special_id))
+        with open(os.path.join(codePath, 'source.ed'), 'r+', encoding='utf-8') as f:
+            code = f.read()
+        return code

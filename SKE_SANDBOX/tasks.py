@@ -1,4 +1,5 @@
 import os
+from timeit import default_timer as timer
 
 from django.conf import settings
 from celery import shared_task
@@ -46,7 +47,12 @@ def genSandboxSubmissionFolder(source_code, input_code, special_id):
 
 def runSandboxSubmission(sandboxSubmissionPath, sourceCodePath, inputCodePath, special_id):
     outputCodePath = os.path.join(sandboxSubmissionPath, 'output.out')
-    run_command = f'timeout --preserve-status 5s {settings.EDLANG_BINARY} {sourceCodePath} < {inputCodePath} > {outputCodePath}'
-    print(run_command)
 
-    return os.system(run_command)
+    start = timer()
+    run_command = f'timeout --preserve-status 6s {settings.EDLANG_BINARY} {sourceCodePath} < {inputCodePath} > {outputCodePath}'
+    return_val = os.system(run_command)
+    end = timer()
+
+    if end - start > 5:
+        os.system(f'echo "[ PRZEKROCZONO LIMIT CZASU ]" > {outputCodePath}')
+    return return_val

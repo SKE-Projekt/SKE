@@ -8,7 +8,11 @@ from . import models
 
 def SandboxView(request):
     sandboxSubmissionForm = forms.SandboxSubmissionForm()
-    return render(request, 'SKE_SANDBOX/sandbox.html', context={'form': sandboxSubmissionForm})
+    try:
+        code = models.SandboxSubmission.objects.filter(author=request.user).latest('id').get_code()
+    except:
+        code = None
+    return render(request, 'SKE_SANDBOX/sandbox.html', context={'form': sandboxSubmissionForm, 'code': code})
 
 def SubmitSandboxSubmissionView(request):
     sandboxSubmissionForm = forms.SandboxSubmissionForm(request.POST)
