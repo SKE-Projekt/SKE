@@ -17,7 +17,8 @@ def SubmitExerciseSubmission(code, exercise_id, author):
     exer_subm = models.ExerciseSubmission(author=author, code=code, exercise=exer)
     exer_subm.save()
 
-    EvalExerciseSubmission.apply_async(args=(exer_subm.id, None))
+    EvalExerciseSubmission(exer_subm.id, None)
+    # EvalExerciseSubmission.apply_async(args=(exer_subm.id, None))
 
     return exer_subm.id
 
@@ -32,7 +33,8 @@ def EvalExerciseSubmission(exer_subm_id, empty):
             exer_subm.result = 3
         else:
             exer_subm.result = 2
-    except:
+    except Exception as e:
+        print("[ERROR]", e, "[END_EXER_ERROR]")
         exer_subm.result = 1
     exer_subm.save()
 
@@ -55,6 +57,7 @@ def GetEvalExerciseSubmissionResult(exer_subm):
 def RunEvalExerciseSubmissionResult(exer_path, exer_subm_path, code_path, input_path):
     # Run code
     outputCodePath = os.path.join(exer_subm_path, 'output.out')
+    print(code_path)
     run_command = f'timeout --preserve-status 5s {settings.EDLANG_BINARY} {code_path} < {input_path} > {outputCodePath}'
 
     run_result = os.system(run_command)
@@ -63,7 +66,7 @@ def RunEvalExerciseSubmissionResult(exer_path, exer_subm_path, code_path, input_
 
     # Check result
     expected_output_path = os.path.join(exer_path, 'wynik.out')
-    run_command = f'cmp -s {expected_output_path} {outputCodePath}'
+    run_command = f'diff -B -Z -E --strip-trailing-cr {expected_output_path} {outputCodePath} > /dev/null'
 
     cmp_result = os.system(run_command)
 
@@ -108,7 +111,7 @@ def GenerateCourseFromJSON(course_json, courses_path, courseUpload, father=None,
     body_path = os.path.join(os.path.join(courses_path, path), 'tresc.md')
     with open(body_path, 'r+', encoding='utf-8') as f:
         body = f.read()
-    
+
     parser = markdown2.Markdown()
     body_parsed = parser.convert(body)
 

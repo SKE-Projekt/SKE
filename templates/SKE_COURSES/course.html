@@ -147,7 +147,7 @@
 				return false;
 			}).fail(function(data) {
 				mCEditors[{{course_exer.id}}] = CodeMirror(editor_{{course_exer.id}}, {
-					value: `{{ course_exer.start_code }}`,
+					value: `{{ course_exer.start_code|safe }}`,
 						mode: "python",
 						lineNumbers: true,
 						theme: "material"
