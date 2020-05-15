@@ -49,7 +49,7 @@
             Wyloguj się
           </a>
           {% else %}
-          <a class="button is-danger" href="">
+          <a class="button is-danger" href="{% url 'register' %}">
             <strong>Załóż konto</strong>
           </a>
           <a class="button is-primary" href="{% url 'login' %}">

@@ -1,0 +1,65 @@
+{% extends 'SKE/base.html' %}
+
+{% block content %}
+<div class="section has-text-centered">
+    <h1 class="title">Zaloguj się</h1>
+    <form method="post" class="form-narrow has-text-centered">
+        {% csrf_token %}
+
+        <div class="field">
+            <div class="control">
+                <label class="label"> Nazwa użytkownika </label>
+                {{ form.username }}
+                {% for username_error in form.username.errors %}
+                    <p class="help is-danger"> {{ password_error }} </p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="field">
+            <div class="control">
+                <label class="label"> Adres email </label>
+                {{ form.email }}
+                {% for username_error in form.email.errors %}
+                    <p class="help is-danger"> {{ password_error }} </p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="field">
+            <div class="control">
+                <label class="label"> Hasło </label>
+                {{ form.password1 }}
+                {% for password_error in form.password1.errors %}
+                    <p class="help is-danger"> {{ password_error }} </p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="field">
+            <div class="control">
+                <label class="label"> Powtórz hasło </label>
+                {{ form.password2 }}
+                {% for password_error in form.password2.errors %}
+                    <p class="help is-danger"> {{ password_error }} </p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="control">
+                <label class="label"> Kod zaproszeniowy </label>
+                {{ form.inv_code }}
+                {% for username_error in form.inv_code.errors %}
+                    <p class="help is-danger"> {{ password_error }} </p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <br />
+        <br />
+        <a href="{% url 'login' %}">Masz już konto? Zaloguj się!</a>
+
+        <br />
+        <br />
+        <button type="submit" class="button is-danger is-light">Zarejestruj się</button>
+    </form>
+</div>
+{% endblock content %}
