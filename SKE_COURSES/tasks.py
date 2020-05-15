@@ -17,8 +17,8 @@ def SubmitExerciseSubmission(code, exercise_id, author):
     exer_subm = models.ExerciseSubmission(author=author, code=code, exercise=exer)
     exer_subm.save()
 
-    EvalExerciseSubmission(exer_subm.id, None)
-    # EvalExerciseSubmission.apply_async(args=(exer_subm.id, None))
+    # EvalExerciseSubmission(exer_subm.id, None)
+    EvalExerciseSubmission.apply_async(args=(exer_subm.id, None))
 
     return exer_subm.id
 
@@ -57,7 +57,6 @@ def GetEvalExerciseSubmissionResult(exer_subm):
 def RunEvalExerciseSubmissionResult(exer_path, exer_subm_path, code_path, input_path):
     # Run code
     outputCodePath = os.path.join(exer_subm_path, 'output.out')
-    print(code_path)
     run_command = f'timeout --preserve-status 5s {settings.EDLANG_BINARY} {code_path} < {input_path} > {outputCodePath}'
 
     run_result = os.system(run_command)
