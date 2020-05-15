@@ -3,7 +3,7 @@
 {% block content %}
 <section class="section">
     <div class="columns">
-        <div class="column is-two-thirds">
+        <div class="column">
             <h1 class="title has-text-centered">
                 {{ contest.title }}
             </h1>
@@ -13,8 +13,70 @@
             {{ contest.body | safe }}
             </div>
             <br>
+            <div class="contest-messages">
+                <h1 class="title">Powiadomienia</h1>
+                {% if cont_notfis %}
+                    {% for msg in cont_notfis %}
+                    <div class="contest-message">
+                        <h1 class="title">{{ msg.title }}</h1>
+                        <h2 class="subtitle">Przesłane przez: @<b>{{ msg.author.username }}</b></h2>
+                        <h5>Treść:</h5>
+                        <div class="message_body">
+                            {{ msg.body | safe }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <h1 class="title no-contest-title">[ Brak powiadomień do wyświetlenia ]</h1>
+                {% endif %}
+            </div>
+        </div>
+        <div class="column">
+            <div class="contest-task-list">
+                <h1 class="subtitle"> Zadania konkursowe </h1>
+                {% if tasks %}
+                    {% for task in tasks %}
+                        {% if task.id in tpassed %}
+                        <a href="{% url 'TaskDashboard' id=task.id %}" class="task-link submission-level-div-4">{{ task.title }}_{{task.ord_id}}</a>
+                        {% elif task.id in tspassed %}
+                        <a href="{% url 'TaskDashboard' id=task.id %}" class="task-link submission-level-div-3">{{ task.title }}_{{task.ord_id}}</a>
+                        {% elif task.id in tnpassed %}
+                        <a href="{% url 'TaskDashboard' id=task.id %}" class="task-link submission-level-div-2">{{ task.title }}_{{task.ord_id}}</a>
+                        {% elif task.id in terrors %}
+                        <a href="{% url 'TaskDashboard' id=task.id %}" class="task-link submission-level-div-1">{{ task.title }}_{{task.ord_id}}</a>
+                        {% else %}
+                        <a href="{% url 'TaskDashboard' id=task.id %}" class="task-link">{{ task.title }}_{{task.ord_id}}</a>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    </br>
+                    <h1 class="title no-contest-title">[ Brak zadań do wyświetlenia ]</h1>
+                {% endif %}
 
-            <div class="contest-submissions">
+                {% if user.is_superuser %}
+                    <section class="section has-text-centered">
+                        <h1 class="title">Wgraj nowe zadanie</h1>
+                        <form class="form" action="{% url 'UploadContestTaskPackage' id=contest.id %}" method="POST" id="course-upload-form" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="file" style="display: inline-block;">
+                                <label class="file-label">
+                                {{ form.package_file }}
+                                <span class="file-cta">
+                                    <span class="file-icon">
+                                    <i class="fas fa-upload"></i>
+                                    </span>
+                                    <span class="file-label">
+                                    Wybierz plik z paczką
+                                    </span>
+                                </span>
+                                </label>
+                            </div>
+                            <button type="submit" class="button is-warning"> Wgraj </button>
+                        </form>
+                    </section>
+                {% endif %}
+
+                <div class="contest-submissions">
                 <h1 class="title">Przesłane zgłoszenia</h1>
                 {% if submissions %}
                     {% for subm in submissions %}
@@ -75,59 +137,6 @@
                     <h1 class="title no-contest-title">[ Brak zgłoszeń do wyświetlenia ]</h1>
                 {% endif %}
             </div>
-
-            <div class="contest-messages">
-                <h1 class="title">Powiadomienia</h1>
-                {% if cont_notifis %}
-                {% else %}
-                    <h1 class="title no-contest-title">[ Brak powiadomień do wyświetlenia ]</h1>
-                {% endif %}
-            </div>
-        </div>
-        <div class="column">
-            <div class="contest-task-list">
-                <h1 class="subtitle"> Zadania konkursowe </h1>
-                {% if tasks %}
-                    {% for task in tasks %}
-                        {% if task.id in tpassed %}
-                        <a href="{% url 'TaskDashboard' id=task.id %}" class="task-link submission-level-div-4">{{ task.title }}_{{task.ord_id}}</a>
-                        {% elif task.id in tspassed %}
-                        <a href="{% url 'TaskDashboard' id=task.id %}" class="task-link submission-level-div-3">{{ task.title }}_{{task.ord_id}}</a>
-                        {% elif task.id in tnpassed %}
-                        <a href="{% url 'TaskDashboard' id=task.id %}" class="task-link submission-level-div-2">{{ task.title }}_{{task.ord_id}}</a>
-                        {% elif task.id in terrors %}
-                        <a href="{% url 'TaskDashboard' id=task.id %}" class="task-link submission-level-div-1">{{ task.title }}_{{task.ord_id}}</a>
-                        {% else %}
-                        <a href="{% url 'TaskDashboard' id=task.id %}" class="task-link">{{ task.title }}_{{task.ord_id}}</a>
-                        {% endif %}
-                    {% endfor %}
-                {% else %}
-                    </br>
-                    <h1 class="title no-contest-title">[ Brak zadań do wyświetlenia ]</h1>
-                {% endif %}
-
-                {% if user.is_superuser %}
-                    <section class="section has-text-centered">
-                        <h1 class="title">Wgraj nowe zadanie</h1>
-                        <form class="form" action="{% url 'UploadContestTaskPackage' id=contest.id %}" method="POST" id="course-upload-form" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            <div class="file" style="display: inline-block;">
-                                <label class="file-label">
-                                {{ form.package_file }}
-                                <span class="file-cta">
-                                    <span class="file-icon">
-                                    <i class="fas fa-upload"></i>
-                                    </span>
-                                    <span class="file-label">
-                                    Wybierz plik z paczką
-                                    </span>
-                                </span>
-                                </label>
-                            </div>
-                            <button type="submit" class="button is-warning"> Wgraj </button>
-                        </form>
-                    </section>
-                {% endif %}
             </div>
         </div>
     </div>

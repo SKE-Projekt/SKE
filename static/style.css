@@ -94,7 +94,8 @@
     color: black;
     text-align: center;
     font-weight: 500;
-    margin: 1rem;
+    margin: 1rem auto;
+    max-width: 400px;
     background: #efefee;
     padding: .7rem 0;
     /* border-radius: .3rem; */
@@ -141,4 +142,22 @@
 
 .submission-title {
     font-size: 1.5rem;
+}
+
+.contest-message {
+    margin: 1rem 2rem;
+    font-size: 1.3rem;
+}
+
+.contest-message>.title {
+    font-size: 1.5rem;
+}
+
+.contest-message>.subtitle {
+    font-size: 1rem;
+}
+
+.message_body {
+    padding: 0 2rem;
+    font-family: monospace;
 }
