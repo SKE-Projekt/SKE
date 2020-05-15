@@ -89,10 +89,13 @@ def EvalSubmissionTest(stest, source_path, submission_path):
     time_spent = end - start
     if time_spent > stest.test.task.timelimit:
         stest.score = 0
+        os.system(f"rm {output_path}")
         return -1
     if run_return:
+        os.system(f"rm {output_path}")
         return run_return
     check_return = os.system(check_command)
+    os.system(f"rm {output_path}")
     if check_return:
         stest.score = 0
         return -2
