@@ -89,7 +89,17 @@
                 <h1 class="subtitle"> Zadania konkursowe </h1>
                 {% if tasks %}
                     {% for task in tasks %}
+                        {% if task.id in tpassed %}
+                        <a href="{% url 'TaskDashboard' id=task.id %}" class="task-link submission-level-div-4">{{ task.title }}_{{task.ord_id}}</a>
+                        {% elif task.id in tspassed %}
+                        <a href="{% url 'TaskDashboard' id=task.id %}" class="task-link submission-level-div-3">{{ task.title }}_{{task.ord_id}}</a>
+                        {% elif task.id in tnpassed %}
+                        <a href="{% url 'TaskDashboard' id=task.id %}" class="task-link submission-level-div-2">{{ task.title }}_{{task.ord_id}}</a>
+                        {% elif task.id in terrors %}
+                        <a href="{% url 'TaskDashboard' id=task.id %}" class="task-link submission-level-div-1">{{ task.title }}_{{task.ord_id}}</a>
+                        {% else %}
                         <a href="{% url 'TaskDashboard' id=task.id %}" class="task-link">{{ task.title }}_{{task.ord_id}}</a>
+                        {% endif %}
                     {% endfor %}
                 {% else %}
                     </br>

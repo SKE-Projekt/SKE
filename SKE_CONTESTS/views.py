@@ -20,12 +20,31 @@ def ListContests(request):
 def ContestDashboard(request, id):
     contest = get_object_or_404(models.Contest, pk=id)
     contest_notifications = models.ContestNotification.objects.filter(contest=contest)
-
     contest_tasks = models.ContestTask.objects.filter(contest=contest)
     submissions = models.ContestTaskSubmission.objects.filter(author=request.user, task__contest=contest).order_by('-id')[:6]
 
+    # Coloring tasks
+    tasks_passed = []
+    tasks_semipassed = []
+    tasks_not_passed = []
+    tasks_erorrs = []
+    for task in contest_tasks:
+        try:
+            last_subm = models.ContestTaskSubmission.objects.filter(author=request.user, task=task).latest('id')
+            if last_subm.result == 1:
+                tasks_erorrs.append(task.id)
+            elif last_subm.result == 2:
+                tasks_not_passed.append(task.id)
+            elif last_subm.result == 3:
+                tasks_semipassed.append(task.id)
+            elif last_subm.result == 4:
+                tasks_passed.append(task.id)
+        except Exception as e:
+            print('[ERROR]', e, '[END_CD_ERROR]')
+
+
     ct_pf = forms.ContestTaskPackageForm()
-    return render(request, 'SKE_CONTESTS/contest_dash.html', context={'contest': contest, 'cont_notfis': contest_notifications, 'form': ct_pf, 'tasks': contest_tasks, 'submissions': submissions})
+    return render(request, 'SKE_CONTESTS/contest_dash.html', context={'contest': contest, 'cont_notfis': contest_notifications, 'form': ct_pf, 'tasks': contest_tasks, 'submissions': submissions, 'tpassed': tasks_passed, 'terror': tasks_erorrs, 'tspassed': tasks_semipassed, 'tnpassed': tasks_not_passed})
 
 def ListSubmissions(request, id):
     contest = get_object_or_404(models.Contest, pk=id)

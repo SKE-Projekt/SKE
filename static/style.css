@@ -96,8 +96,8 @@
     font-weight: 500;
     margin: 1rem;
     background: #efefee;
-    padding: .5rem 0;
-    border-radius: .3rem;
+    padding: .7rem 0;
+    /* border-radius: .3rem; */
 }
 
 .task-link.success {
