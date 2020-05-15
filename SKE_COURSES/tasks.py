@@ -62,6 +62,7 @@ def RunEvalExerciseSubmissionResult(exer_path, exer_subm_path, code_path, input_
 
     run_result = os.system(run_command)
     if run_result != 0:
+        os.system(f"rm {outputCodePath}")
         return run_result
 
     # Check result
@@ -69,7 +70,7 @@ def RunEvalExerciseSubmissionResult(exer_path, exer_subm_path, code_path, input_
     run_command = f'diff -B -Z -E --strip-trailing-cr {expected_output_path} {outputCodePath} > /dev/null'
 
     cmp_result = os.system(run_command)
-
+    os.system(f"rm {outputCodePath}")
     if cmp_result:
         return -1;
     return 0
