@@ -79,6 +79,18 @@ class ContestTaskSubmission(models.Model):
     score = models.IntegerField(default=-1)
     result = models.IntegerField(default=0, choices=RESULT)
 
+    def get_status(self):
+        if self.result == 0:
+            return "W TRAKCIE"
+        elif self.result == 1:
+            return "BŁĄD SYSTEMU"
+        elif self.result == 2:
+            return "NIEPOPRAWANE"
+        elif self.result == 3:
+            return "CZĘŚCIOWE"
+        else:
+            return "POPRAWNE"
+
 class ContestTaskSubmissionTest(models.Model):
     RESULT = (
         (0, 'NIE SPRAWDZONO'),
@@ -93,3 +105,15 @@ class ContestTaskSubmissionTest(models.Model):
 
     score = models.IntegerField(default=-1)
     result = models.IntegerField(default=0, choices=RESULT)
+
+    def get_status(self):
+        if self.result == 0:
+            return "W TRAKCIE SPRAWDZANIA"
+        elif self.result == 1:
+            return "BŁĄD SYSTEMU"
+        elif self.result == 2:
+            return "LIMIT CZASU"
+        elif self.result == 3:
+            return "NIEPOPRAWNE"
+        else:
+            return "POPRAWNE"

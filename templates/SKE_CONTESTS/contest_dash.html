@@ -18,7 +18,8 @@
                 {% if cont_notfis %}
                     {% for msg in cont_notfis %}
                     <div class="contest-message">
-                        <h1 class="title">{{ msg.title }}</h1>
+                        <h1 class="title">[TEMAT] {{ msg.title }} </h1>
+                        <h2 class="subtitle">Opublikowane: {{ msg.date_published }} </h2>
                         <h2 class="subtitle">Przesłane przez: @<b>{{ msg.author.username }}</b></h2>
                         <h5>Treść:</h5>
                         <div class="message_body">
@@ -99,7 +100,7 @@
                                 <div class="level-item has-text-centered">
                                     <div>
                                     <p class="heading submission-header">Status</p>
-                                    <p class="title submission-title">{{ subm.result }}</p>
+                                    <p class="title submission-title">{{ subm.get_status }}</p>
                                     </div>
                                 </div>
                                 <div class="level-item has-text-centered">

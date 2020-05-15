@@ -24,11 +24,11 @@
     Data przesłania: {{ subm.date_submit }}
 [ Stan zgłoszenia ]
     Wynik: {{ subm.score }}
-    Status: {{ subm.result }}
+    Status: {{ subm.get_status }}
 [ Stan testów ]
 {% for ttest in subm.ttests.all %}Test[ {{ ttest.test.ord_id }} ]
     Wynik: {{ ttest.score }}
-    Status: {{ ttest.result }}
+    Status: {{ ttest.get_status }}
 {% endfor %}
 </pre>
         </div>
