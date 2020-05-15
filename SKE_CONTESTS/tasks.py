@@ -27,8 +27,9 @@ def SaveTaskSubmission(code, user, task):
     for a in ttests:
         a.save()
     # Call celery
-    RunSubmission(submission.id)
+    RunSubmission.apply_async(args=[submission.id])
 
+@shared_task
 def RunSubmission(submission_id):
     submission = models.ContestTaskSubmission.objects.get(pk=submission_id)
     submission_path = os.path.join(submission.task.path, str(submission.special_id))
@@ -80,17 +81,17 @@ def EvalSubmissionTest(stest, source_path, submission_path):
     expected_output_path = os.path.join(stest.test.path, 'output.out')    
     output_path = os.path.join(submission_path, str(stest.test.ord_id) + '_output.out')
 
-    run_command = f"timeout --preserve-status {stest.test.task.timelimit}s {settings.EDLANG_BINARY} {source_path} < {input_path} > {output_path}"
+    run_command = f"timeout --preserve-status {stest.test.task.timelimit + 1}s {settings.EDLANG_BINARY} {source_path} < {input_path} > {output_path}"
     check_command = f"diff -B -Z -E --strip-trailing-cr {expected_output_path} {output_path} > /dev/null"
     start = timer()
     run_return = os.system(run_command)
     end = timer()
     time_spent = end - start
-    if run_return:
-        return run_return
     if time_spent > stest.test.task.timelimit:
         stest.score = 0
         return -1
+    if run_return:
+        return run_return
     check_return = os.system(check_command)
     if check_return:
         stest.score = 0

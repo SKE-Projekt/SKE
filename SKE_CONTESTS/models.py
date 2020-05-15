@@ -110,7 +110,7 @@ class ContestTaskSubmissionTest(models.Model):
         if self.result == 0:
             return "W TRAKCIE SPRAWDZANIA"
         elif self.result == 1:
-            return "BŁĄD SYSTEMU"
+            return "BŁĄD PROGRAMU"
         elif self.result == 2:
             return "LIMIT CZASU"
         elif self.result == 3:
