@@ -1,10 +1,14 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseForbidden
+from django.contrib.auth.decorators import login_required
 
 from . import forms
 from . import tasks
 from . import models
 
+
+def InformationView(request):
+    return render(request, 'SKE_SANDBOX/information.html')
 
 def SandboxView(request):
     sandboxSubmissionForm = forms.SandboxSubmissionForm()
@@ -14,6 +18,7 @@ def SandboxView(request):
         code = None
     return render(request, 'SKE_SANDBOX/sandbox.html', context={'form': sandboxSubmissionForm, 'code': code})
 
+@login_required
 def SubmitSandboxSubmissionView(request):
     sandboxSubmissionForm = forms.SandboxSubmissionForm(request.POST)
 

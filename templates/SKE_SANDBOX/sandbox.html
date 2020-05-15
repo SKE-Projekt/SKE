@@ -70,7 +70,7 @@
     <br>
     <br>
     <br>
-    <a href="" class="button is-warning is-medium">Zapisz się w konkursie</a>
+    <a href="{% url 'ListContests' %}" class="button is-warning is-medium">Zapisz się w konkursie</a>
 </section>
 <section class="hero is-info has-text-centered">
     <div class="hero-body">
@@ -79,8 +79,14 @@
 </section>
 <section class="section has-text-centered">
     <h1 class="title has-text-centered">Zajrzyj do kursu wprowadzającego</h1>
+    <div class="special-list has-text-left" style="margin: auto; display: inline-block;">
+        <h5 class="special-list-item" style="font-size: 1.2rem"><i class="fas fa-ethernet"></i> - Rozbicie na działy umożliwiające stopniowe przyswojenie wiedzy</h5>
+        <h5 class="special-list-item" style="font-size: 1.2rem"><i class="fas fa-ethernet"></i> - Duża ilość ćwiczeń pomagająca zrozumieć przerabiany materiał</h5>
+    </div>
     <br>
-    <a href="" class="button is-info is-medium">Przejdź do strony kursu</a>
+    <br>
+    <br>
+    <a href="{% url 'ListCourses' %}" class="button is-info is-medium">Przejdź do strony kursu</a>
 </section>
 {% endblock content %}
 

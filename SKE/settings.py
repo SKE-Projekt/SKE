@@ -119,6 +119,8 @@ STATICFILES_DIRS = (
 
 # Logout redirection
 
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'sandbox'
 LOGOUT_REDIRECT_URL = 'login'
 
 

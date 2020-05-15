@@ -3,6 +3,7 @@ import datetime
 from django.shortcuts import redirect
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseForbidden, HttpResponseBadRequest
+from django.contrib.auth.decorators import login_required
 
 from django.contrib import messages
 
@@ -21,36 +22,39 @@ def ContestDashboard(request, id):
     contest = get_object_or_404(models.Contest, pk=id)
     contest_notifications = models.ContestNotification.objects.filter(contest=contest)
     contest_tasks = models.ContestTask.objects.filter(contest=contest)
-    submissions = models.ContestTaskSubmission.objects.filter(author=request.user, task__contest=contest).order_by('-id')[:6]
-
-    # Coloring tasks
+     # Coloring tasks
     tasks_passed = []
     tasks_semipassed = []
     tasks_not_passed = []
     tasks_erorrs = []
-    for task in contest_tasks:
-        try:
-            last_subm = models.ContestTaskSubmission.objects.filter(author=request.user, task=task).latest('id')
-            if last_subm.result == 1:
-                tasks_erorrs.append(task.id)
-            elif last_subm.result == 2:
-                tasks_not_passed.append(task.id)
-            elif last_subm.result == 3:
-                tasks_semipassed.append(task.id)
-            elif last_subm.result == 4:
-                tasks_passed.append(task.id)
-        except Exception as e:
-            print('[ERROR]', e, '[END_CD_ERROR]')
-
+    if request.user.is_authenticated:
+        submissions = models.ContestTaskSubmission.objects.filter(author=request.user, task__contest=contest).order_by('-id')[:6]
+        for task in contest_tasks:
+            try:
+                last_subm = models.ContestTaskSubmission.objects.filter(author=request.user, task=task).latest('id')
+                if last_subm.result == 1:
+                    tasks_erorrs.append(task.id)
+                elif last_subm.result == 2:
+                    tasks_not_passed.append(task.id)
+                elif last_subm.result == 3:
+                    tasks_semipassed.append(task.id)
+                elif last_subm.result == 4:
+                    tasks_passed.append(task.id)
+            except Exception as e:
+                print('[ERROR]', e, '[END_CD_ERROR]')
+    else:
+        submissions = None
 
     ct_pf = forms.ContestTaskPackageForm()
     return render(request, 'SKE_CONTESTS/contest_dash.html', context={'contest': contest, 'cont_notfis': contest_notifications, 'form': ct_pf, 'tasks': contest_tasks, 'submissions': submissions, 'tpassed': tasks_passed, 'terror': tasks_erorrs, 'tspassed': tasks_semipassed, 'tnpassed': tasks_not_passed})
 
+@login_required
 def ListSubmissions(request, id):
     contest = get_object_or_404(models.Contest, pk=id)
     submissions = models.ContestTaskSubmission.objects.filter(author=request.user, task__contest=contest).order_by('-id')
     return render(request, 'SKE_CONTESTS/list_subms.html', {'subms': submissions, 'id': id})
 
+@login_required
 def TaskDashboard(request, id):
     task = get_object_or_404(models.ContestTask, pk=id)
     submit_form = forms.ContestTaskSubmissionForm()
@@ -58,12 +62,14 @@ def TaskDashboard(request, id):
     submissions = models.ContestTaskSubmission.objects.filter(author=request.user, task=task).order_by('-id')[:6]
     return render(request, 'SKE_CONTESTS/task_dash.html', context={'task': task, 'form': submit_form, 'subms': submissions, 'subms_left': task.sublimit - submission_count})
 
+@login_required
 def SubmissionDashboard(request, id):
     subm = get_object_or_404(models.ContestTaskSubmission, pk=id)
     if subm.author == request.user or request.user.is_superuser:
         return render(request, 'SKE_CONTESTS/subm_dash.html', context={'subm': subm})
     return HttpResponseForbidden("Czego tutaj szukasz")
 
+@login_required
 def UploadContestTaskPackage(request, id):
     if request.user.is_superuser:
         contest = get_object_or_404(models.Contest, pk=id)
@@ -77,6 +83,7 @@ def UploadContestTaskPackage(request, id):
         return redirect('ContestDashboard', id=id)
     return HttpResponseForbidden()
 
+@login_required
 def SendContestTaskSubmission(request, id):
     task = get_object_or_404(models.ContestTask, pk=id)
     form = forms.ContestTaskSubmissionForm(request.POST)

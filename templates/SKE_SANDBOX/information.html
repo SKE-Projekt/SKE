@@ -1,0 +1,92 @@
+{% extends 'SKE/base.html' %}
+
+{% block content %}
+<section class="hero is-warning is-medium">
+    <div class="hero-body">
+        <div class="container has-text-centered">
+            <h1 class="title" style="font-size: 6rem;">
+                SKE
+            </h1>
+            <h3 class="subtitle" style="font-size: 2rem;">
+                Otwarta platforma nauczania programowania
+            </h3>
+
+            <a href="{% url 'sandbox' %}" class="button is-warning is-large is-light" style="display: inline-block">
+                Wypróbuj teraz
+            </a>
+        </div>
+    </div>
+</section>
+<section class="section">
+    <div class="container" style="max-width: 751px;font-size: 1.2rem;">
+        <h1 class="title">Cześć!</h1>
+        <p>
+            <b>S</b>ystem <b>K</b>onkursowo-<b>E</b>dukacyjny jest otwartą inicjatywą pragnącą przygotować materiały i
+            konkursy edukacyjne wprowadzające w świat programowania.
+        </p>
+        <br />
+        <p>
+            Chcemy ułatwić naukę zarówno dzieciom jak ich rodzicom i nauczycielom.
+        </p>
+        <br />
+        <p>
+            Naszym planem jest stworzenie platformy, która:
+        </p>
+        <h5 class="special-list-item"><i class="fas fa-ethernet"></i> - Umożliwia tworzenie konkursów edukacyjnych w
+            specjalnym, przygotowanym przez
+            nas języku <b>E</b></h5>
+        <h5 class="special-list-item"><i class="fas fa-ethernet"></i> - Umożliwia udostępnianie materiałów edukacyjnych
+            z różnych dziedzin informatyki
+        </h5>
+        <h5 class="special-list-item"><i class="fas fa-ethernet"></i> - Pozwala w łatwy sposób śledzić postępy dzieci -
+            zarówno nauczycielom jak i rodzicom
+        </h5>
+        <h5>I wiele innych...</h5>
+    </div>
+</section>
+<section class="hero is-danger is-medium">
+    <div class="hero-body">
+        <div class="container has-text-centered">
+            <h1 class="title">
+                Kiedy?
+            </h1>
+            <h3 class="subtitle" style="max-width: 751px; margin: auto; font-size: 1.3rem;">
+                Pierwszy konkurs wprowadzający do języka <b>Ed</b>(wraz z udostępnieniem materiałów dla dzieci i
+                nauczycieli) zamierzamy wstępnie przeprowadzić na <b>jesień</b>, jednak naszym głównym prioritem jest
+                przygotować platformę na <b>przyszły rok</b>.</h3>
+            </br>
+            <h3 class="subtitle" style="max-width: 751px; margin: auto; font-size: 1.3rem;"> Chcemy oczywiście dostać
+                się na listę konkursów
+                honorowanych przez kuratorium. </h3>
+        </div>
+    </div>
+</section>
+<section class="hero is-medium">
+    <div class="hero-body">
+        <div class="container has-text-centered">
+            <h1 class="title" style="font-size: 3rem;">
+                Masz pytania?
+            </h1>
+            <h3 class="subtitle">
+                Skontaktuj się z nami
+            </h3>
+            <div class="tile is-ancestor">
+                <div class="tile is-4 is-horizontal is-parent contact-tiles">
+                    <div class="tile is-child box">
+                        <p class="title"><i class="far fa-envelope-open"></i></p>
+                        <p>
+                            skeprojekt@gmail.com
+                        </p>
+                    </div>
+                    <div class="tile is-child box">
+                        <p class="title"><i class="fas fa-phone"></i></p>
+                        <p>
+                            +48 732 187 719
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

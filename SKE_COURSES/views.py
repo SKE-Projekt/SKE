@@ -2,6 +2,7 @@ from django.shortcuts import render, HttpResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.http import HttpResponseBadRequest
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 from . import forms
 from . import tasks
@@ -20,6 +21,7 @@ def ViewCourse(request, course_id):
     course_exercises = models.CourseExercise.objects.filter(course_id=course)
     return render(request, 'SKE_COURSES/course.html', context={'course': course, 'course_children': course_children, 'exercises': course_exercises, 'exer_form': submit_form})
 
+@login_required
 def UploadCoursePackage(request):
     form = forms.CoursePackageForm(request.POST, request.FILES)
     if request.method == "POST" and form.is_valid() and request.user.is_superuser:
@@ -31,6 +33,7 @@ def UploadCoursePackage(request):
         messages.add_message(request, messages.ERROR, 'Nie można przesłać paczki', 'is-danger')
     return redirect('ListCourses')
 
+@login_required
 def SubmitExerciseSubmission(request, id):
     form = forms.ExerciseSubmissionForm(request.POST)
     if form.is_valid() and request.user.is_authenticated:
@@ -39,6 +42,7 @@ def SubmitExerciseSubmission(request, id):
         return HttpResponse(exer_subm_id)
     return HttpResponseBadRequest("ERROR")
 
+@login_required
 def GetExerciseSubmissionResult(request, id):
     exer_subm = get_object_or_404(models.ExerciseSubmission, pk=id)
 
@@ -54,6 +58,7 @@ def GetStartCodeForExercise(request, id):
         return HttpResponse(exer_subms.code)
     return HttpResponseBadRequest("NONE")
 
+@login_required
 def GetExampleCodeForExercise(request, id):
     if request.user.is_authenticated:
         exer = get_object_or_404(models.CourseExercise, pk=id)
