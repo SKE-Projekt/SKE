@@ -35,7 +35,9 @@ def ListSubmissions(request, id):
 def TaskDashboard(request, id):
     task = get_object_or_404(models.ContestTask, pk=id)
     submit_form = forms.ContestTaskSubmissionForm()
-    return render(request, 'SKE_CONTESTS/task_dash.html', context={'task': task, 'form': submit_form})
+    submission_count = models.ContestTaskSubmission.objects.filter(author=request.user, task=task).count()
+    submissions = models.ContestTaskSubmission.objects.filter(author=request.user, task=task).order_by('-id')[:6]
+    return render(request, 'SKE_CONTESTS/task_dash.html', context={'task': task, 'form': submit_form, 'subms': submissions, 'subms_left': task.sublimit - submission_count})
 
 def SubmissionDashboard(request, id):
     subm = get_object_or_404(models.ContestTaskSubmission, pk=id)
