@@ -1,0 +1,54 @@
+{% extends 'SKE/base.html' %}
+
+{% block library_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/codemirror.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/theme/material.min.css" />
+{% endblock library_css %}
+
+{% block library_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/mode/python/python.min.js"></script>
+{% endblock library_js %}
+
+{% block content %}
+<section class="section">
+    <div class="columns">
+        <div class="column">
+<h1 class="title">Dane zgłoszenia</h1>
+<pre>
+[ Informacje o zgłoszeniu ]
+    ID: {{ subm.id }}</h1>
+    Zadanie: <a href="{% url 'TaskDashboard' id=subm.task.id %}">{{ subm.task.title }}</a>
+    Konkurs: <a href="{% url 'ContestDashboard' id=subm.task.contest.id %}">{{ subm.task.contest.title }}</a>
+    Autor: {{ subm.author.username }}
+    Data przesłania: {{ subm.date_submit }}
+[ Stan zgłoszenia ]
+    Wynik: {{ subm.score }}
+    Status: {{ subm.result }}
+[ Stan testów ]
+{% for ttest in subm.ttests.all %}Test[ {{ ttest.test.ord_id }} ]
+    Wynik: {{ ttest.score }}
+    Status: {{ ttest.result }}
+{% endfor %}
+</pre>
+        </div>
+        <div class="column">
+            <h1 class="title">Kod zgłoszenia</h1>
+            <div id="editor" class="editor"></div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+    var editor = document.getElementById("editor");
+    var mCEditor = CodeMirror(editor, {
+        value: `{{subm.code|safe}}`,
+        mode: "python",
+        lineNumbers: true,
+        theme: "material",
+        readOnly: true
+    });
+</script>
+{% endblock scripts %}

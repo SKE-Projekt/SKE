@@ -1,0 +1,43 @@
+{% extends 'SKE/base.html' %}
+
+{% block content %}
+<section class="section">
+    <a href="{% url 'ContestDashboard' id=id %}">Wróć do konkrsu</a>
+    <h1 class="title has-text-centered">Wszystkie zgłoszenia</h1>
+    <br>
+    <div>
+    {% for subm in subms %}
+                        <div class="submission-level-div submission-level-div-{{subm.result}}" id="subm-{{subm.id}}">
+                            {% comment %} {{ subm.id }} - {{ subm.result }}
+                            789 {% endcomment %}
+                            <nav class="level">
+                                <div class="level-item has-text-centered">
+                                    <div>
+                                    <p class="heading">ID</p>
+                                    <p class="title"><a href="{% url 'SubmissionDashboard' id=subm.id %}">{{ subm.id }}</a></p>
+                                    </div>
+                                </div>
+                                <div class="level-item has-text-centered">
+                                    <div>
+                                    <p class="heading">Zadanie</p>
+                                    <p class="title">{{ subm.task.title }}</p>
+                                    </div>
+                                </div>
+                                <div class="level-item has-text-centered">
+                                    <div>
+                                    <p class="heading">Status</p>
+                                    <p class="title">{{ subm.result }}</p>
+                                    </div>
+                                </div>
+                                <div class="level-item has-text-centered">
+                                    <div>
+                                    <p class="heading">Wynik</p>
+                                    <p class="title">{{ subm.score }}</p>
+                                    </div>
+                                </div>
+                            </nav>
+                        </div>
+                    {% endfor %}
+                    </div>
+</section>
+{% endblock content %}

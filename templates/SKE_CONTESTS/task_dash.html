@@ -1,7 +1,69 @@
 {% extends 'SKE/base.html' %}
 
+{% block library_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/codemirror.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/theme/material.min.css" />
+{% endblock library_css %}
+
+{% block library_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/mode/python/python.min.js"></script>
+{% endblock library_js %}
+
 {% block content %}
+<form action="{% url 'SendContestTaskSubmission' id=task.id %}" method='POST' class='is-hidden'>
+    {% csrf_token %}
+    {{ form.code }}
+    <button type="submit" id="submit-button"></button>
+</form>
 
-
-
+<section class="section">
+    <a href="{% url 'ContestDashboard' id=task.contest.id %}" style="color: black; margin-bottom: 1rem; display: inline-block;"> Wróć do konkursu </a>
+    <div class="columns">
+        <div class="column">
+            <h1 class="title"> {{ task.title }} </h1>
+            <div class="task_body">
+                {{ task.body | safe }}
+            </div>
+        </div>
+        <div class="column">
+            <div id="editor" class="editor"></div>
+            <div class="has-text-centered">
+            <span class="send-button-span">
+                <a class="button is-success is-medium" id="send-submit">Prześlij rozwiązanie</a>
+                </br>
+                </br>
+            </span>
+            <span style="color: black; font-weight: 500;">Masz jeszcze 1 próbę rozwiązania</span>
+            </div>
+        </div>
+</section>
 {% endblock content %}
+
+{% block scripts %}
+<script>
+    test_value = `# Nie wiesz co i jak? Nie przejmuj się
+# przygotujemy kursy dzięki którym
+# pojmiesz Ed-a w mgnieniu oka
+String var = "Hello";
+Print(var, " World!");
+`;
+
+    var editor = document.getElementById("editor");
+    var mCEditor = CodeMirror(editor, {
+        value: test_value,
+        mode: "python",
+        lineNumbers: true,
+        theme: "material"
+    });
+</script>
+
+<script>
+    $("#send-submit").click(function() {
+        var code = mCEditor.getValue();
+        $("#id_code").val(code);
+        $("#submit-button").click();
+        return false;
+    });
+</script>
+{% endblock scripts %}

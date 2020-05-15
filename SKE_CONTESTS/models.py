@@ -53,7 +53,43 @@ class ContestTask(models.Model):
     path = models.CharField(max_length=1024)
 
 class ContestTaskTest(models.Model):
-    task = models.ForeignKey(ContestTask, on_delete=models.CASCADE)
+    task = models.ForeignKey(ContestTask, on_delete=models.CASCADE, related_name='tests', related_query_name='tests_query')
     path = models.CharField(max_length=1024)
 
     ord_id = models.IntegerField()
+
+
+class ContestTaskSubmission(models.Model):
+    RESULT = (
+        (0, 'NIE SPRAWDZONO'),
+        (1, 'BŁĄD SPRAWDZANIA'),
+        (2, 'CAŁKOWICIE BŁĘDNE'),
+        (3, 'CZĘŚCIOWO BŁĘDNE'),
+        (4, 'POPRAWNE')
+    )
+
+    task = models.ForeignKey(ContestTask, on_delete=models.CASCADE)
+    author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+
+    special_id = models.UUIDField(default=uuid.uuid4)
+    code = models.TextField(max_length=24 * 1024)
+
+    date_submit = models.DateTimeField(auto_now_add=True)
+
+    score = models.IntegerField(default=-1)
+    result = models.IntegerField(default=0, choices=RESULT)
+
+class ContestTaskSubmissionTest(models.Model):
+    RESULT = (
+        (0, 'NIE SPRAWDZONO'),
+        (1, 'BŁĄD SPRAWDZANIA'),
+        (2, 'TIME_LIMIT'),
+        (3, 'ZLA_ODPOWIEDZ'),
+        (4, 'POPRAWNE')
+    )
+
+    test = models.ForeignKey(ContestTaskTest, on_delete=models.CASCADE)
+    submit = models.ForeignKey(ContestTaskSubmission, on_delete=models.CASCADE, related_name='ttests')
+
+    score = models.IntegerField(default=-1)
+    result = models.IntegerField(default=0, choices=RESULT)

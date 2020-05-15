@@ -111,3 +111,34 @@
 .task-link.not-success {
     background: #e67e22;
 }
+
+.submission-level-div {
+    margin: 1.3rem .3rem;
+    background: rgba(239, 239, 238, 1);
+    padding: .4rem 0 .7rem 0;
+}
+
+.submission-level-div-1 {
+    background: rgba(231, 77, 60, 0.7);
+}
+
+.submission-level-div-2 {
+    background: rgba(52, 152, 219, 0.7);
+}
+
+.submission-level-div-3 {
+    background: rgba(243, 157, 18, 0.7);
+}
+
+.submission-level-div-4 {
+    background: rgba(46, 204, 112, 0.7);
+}
+
+.submission-header {
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.submission-title {
+    font-size: 1.5rem;
+}

@@ -1,6 +1,7 @@
 import os
 import json
 import tarfile
+from timeit import default_timer as timer
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -9,6 +10,103 @@ from celery import shared_task
 
 from . import models
 
+
+################################### SUBMISSSIONS
+
+def SaveTaskSubmission(code, user, task):
+    code = code.replace('\r\n', '\n')
+    submission = models.ContestTaskSubmission(task=task, author=user, code=code)
+
+    task_tests = models.ContestTaskTest.objects.filter(task=task)
+    ttests =[]
+    for ttest in task_tests:
+        ttests.append(models.ContestTaskSubmissionTest(submit=submission, test=ttest))
+    
+    # Save everything
+    submission.save()
+    for a in ttests:
+        a.save()
+    # Call celery
+    RunSubmission(submission.id)
+
+def RunSubmission(submission_id):
+    submission = models.ContestTaskSubmission.objects.get(pk=submission_id)
+    submission_path = os.path.join(submission.task.path, str(submission.special_id))
+    submission_tests = models.ContestTaskSubmissionTest.objects.filter(submit=submission)
+    correct = 0
+
+    try:
+        source_path = SaveSubmissionCode(submission_path, submission.code)
+
+        submission.score = 0
+        for stest in submission_tests:
+            return_val = RunSubmissionTest(stest, source_path, submission_path)
+            if return_val == 4:
+                correct += 1
+        for stest in submission_tests:
+            if stest.score >= 0:
+                submission.score += stest.score
+        if correct == len(submission_tests):
+            submission.result = 4
+        elif correct == 0:
+            submission.result = 2
+        else:
+            submission.result = 3
+    except Exception as e:
+        print('[ERROR]', e, '[END_SUBMISSION_ERROR]')
+        submission.result = 1
+        submission.score = -1
+    submission.save()
+
+def RunSubmissionTest(stest, source_path, submission_path):
+    return_code = EvalSubmissionTest(stest, source_path, submission_path)
+
+    if return_code == 0:
+        test_result = 4
+    elif return_code == -1:
+        test_result = 2
+    elif return_code == -2:
+        test_result = 3
+    else:
+        test_result = 1
+
+    stest.result = test_result
+    stest.save()
+
+    return test_result
+
+def EvalSubmissionTest(stest, source_path, submission_path):
+    input_path = os.path.join(stest.test.path, 'input.in')
+    expected_output_path = os.path.join(stest.test.path, 'output.out')    
+    output_path = os.path.join(submission_path, str(stest.test.ord_id) + '_output.out')
+
+    run_command = f"timeout --preserve-status {stest.test.task.timelimit}s {settings.EDLANG_BINARY} {source_path} < {input_path} > {output_path}"
+    check_command = f"diff -B -Z -E --strip-trailing-cr {expected_output_path} {output_path} > /dev/null"
+    start = timer()
+    run_return = os.system(run_command)
+    end = timer()
+    time_spent = end - start
+    if run_return:
+        return run_return
+    if time_spent > stest.test.task.timelimit:
+        stest.score = 0
+        return -1
+    check_return = os.system(check_command)
+    if check_return:
+        stest.score = 0
+        return -2
+    stest.score = 1
+    return 0
+
+def SaveSubmissionCode(path, code):
+    os.makedirs(path, exist_ok=True)
+    source_path = os.path.join(path, 'source.ed')
+    with open(source_path, 'w+', encoding='utf-8') as f:
+        f.write(code)
+
+    return source_path
+
+################################### TASK_PCAKAGES
 
 def UploadContestTaskPackage(package, user, contest):
     contest_path = os.path.join(settings.CONTESTS_DIR, str(contest.special_id))

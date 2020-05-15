@@ -17,6 +17,60 @@
             <div class="contest-submissions">
                 <h1 class="title">Przesłane zgłoszenia</h1>
                 {% if submissions %}
+                    {% for subm in submissions %}
+                        <div class="submission-level-div submission-level-div-{{subm.result}}" id="subm-{{subm.id}}">
+                            {% comment %} {{ subm.id }} - {{ subm.result }}
+                            789 {% endcomment %}
+                            <nav class="level">
+                                <div class="level-item has-text-centered">
+                                    <div>
+                                    <p class="heading submission-header">ID</p>
+                                    <p class="title submission-title"><a style="color: black" href="{% url 'SubmissionDashboard' id=subm.id %}">#{{ subm.id }}</a></p>
+                                    </div>
+                                </div>
+                                <div class="level-item has-text-centered">
+                                    <div>
+                                    <p class="heading submission-header">Zadanie</p>
+                                    <p class="title submission-title">{{ subm.task.title }}</p>
+                                    </div>
+                                </div>
+                                <div class="level-item has-text-centered">
+                                    <div>
+                                    <p class="heading submission-header">Status</p>
+                                    <p class="title submission-title">{{ subm.result }}</p>
+                                    </div>
+                                </div>
+                                <div class="level-item has-text-centered">
+                                    <div>
+                                    <p class="heading submission-header">Wynik</p>
+                                    <p class="title submission-title">{{ subm.score }}</p>
+                                    </div>
+                                </div>
+                            </nav>
+
+                            {% comment %} <div class="subm-{{subm.id}}-tests">
+                                {% for ttest in subm.ttests.all %}
+                                    <div class="columns has-text-centered">
+                                        <div class="column">
+                                            <p class="heading">Nr Testu</p>
+                                            <p class="title">{{ ttest.test.ord_id }}</p>
+                                        </div>
+                                        <div class="column">
+                                            <p class="heading">Wynik</p>
+                                            <p class="title">{{ ttest.result }}</p>
+                                        </div>
+                                        <div class="column">
+                                            <p class="heading">Punkty</p>
+                                            <p class="title">{{ ttest.score }}</p>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div> {% endcomment %}
+                        </div>
+                    {% endfor %}
+                    <div class="has-text-centered" style="margin-top: 2rem;">
+                    <a href="{% url 'ListSubmissions' id=contest.id %}">Zobacz wszystkie swoje zgłoszenia</a>
+                    </div>
                 {% else %}
                     <h1 class="title no-contest-title">[ Brak zgłoszeń do wyświetlenia ]</h1>
                 {% endif %}
