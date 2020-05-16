@@ -41,11 +41,11 @@
 {% if course_children %}
 <section class="section has-text-centered">
 	<h1 class="title">Działy kursu</h1>
-	<ol>
+	<ul>
 	{% for course_child in course_children %}
 		<li><a href="{% url 'ViewCourse' course_id=course_child.id %}" class="courseChild">{{ course_child.title }}</a></li>
 	{% endfor %}
-	</ol>
+	</ul>
 </section>
 {% endif %}
 

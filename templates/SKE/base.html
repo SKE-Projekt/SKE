@@ -10,7 +10,6 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'bulma.min.css' %}" />
     <link rel="stylesheet" href="{% static 'style.css' %}" />
-
     {% block library_css %}
     {% endblock library_css %}
 </head>
@@ -50,6 +49,11 @@
     <script>
         $('.delete').click(function () {
             $(this).parent().remove();
+        });
+
+        $(".burger").click(function() {
+            $(".burger").toggleClass('is-active');
+            $("#navbarBasicExample").toggleClass('is-active');
         });
     </script>
 

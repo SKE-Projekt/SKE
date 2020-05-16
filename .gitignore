@@ -133,3 +133,6 @@ dmypy.json
 
 # Uploaded files
 files/
+
+# Django
+static/admin/

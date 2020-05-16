@@ -17,8 +17,8 @@ def ListCourses(request):
 def ViewCourse(request, course_id):
     submit_form = forms.ExerciseSubmissionForm()
     course = get_object_or_404(models.Course, pk=course_id)
-    course_children = models.Course.objects.filter(father_course=course)
-    course_exercises = models.CourseExercise.objects.filter(course_id=course)
+    course_children = models.Course.objects.filter(father_course=course).order_by('ord_id')
+    course_exercises = models.CourseExercise.objects.filter(course_id=course).order_by('ord_id')
     return render(request, 'SKE_COURSES/course.html', context={'course': course, 'course_children': course_children, 'exercises': course_exercises, 'exer_form': submit_form})
 
 @login_required
