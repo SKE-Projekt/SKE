@@ -21,10 +21,7 @@
     <a href="{% url 'ContestDashboard' id=task.contest.id %}" style="color: black; margin-bottom: 1rem; display: inline-block;"> Wróć do konkursu </a>
     <div class="columns">
         <div class="column">
-            <h1 class="title"> {{ task.title }} </h1>
-            <div class="task_body">
-                {{ task.body | safe }}
-            </div>
+            {{ task.body | safe }}
         </div>
         <div class="column">
             <div id="editor" class="editor"></div>

@@ -205,3 +205,49 @@
 .token-div>h5 {
     font-size: 1.2rem;
 }
+
+
+/* TASK BODY */
+
+.task-header {
+    margin-bottom: 2rem;
+    font-family: monospace;
+}
+
+.task-header>.subtitle {
+    margin: 0;
+    font-size: .9rem;
+}
+
+.task-tresc {
+    margin-bottom: 1rem;
+}
+
+.task-tresc>p {
+    margin: .5rem;
+}
+
+.task-io-header {
+    font-family: monospace;
+    text-align: center;
+    font-size: 1.4rem;
+}
+
+.task-io>p {
+    margin: 1rem;
+}
+
+.task-io-example-title {
+    margin-top: 1rem;
+    font-size: 1.3rem;
+    font-family: monospace;
+}
+
+.task-io-example {
+    max-width: 80%;
+    margin: auto;
+}
+
+.task-io-example>.subtitle {
+    font-family: monospace;
+}
