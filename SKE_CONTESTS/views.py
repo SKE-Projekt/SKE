@@ -2,8 +2,9 @@ import datetime
 
 from django.shortcuts import redirect
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseForbidden, HttpResponseBadRequest
+from django.http import HttpResponseForbidden, HttpResponseBadRequest, HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 from django.contrib import messages
 
@@ -19,6 +20,7 @@ def ListContests(request):
     return render(request, 'SKE_CONTESTS/contests_list.html', context={'active_contests': active_contests, 'future_contests': future_contests, 'past_contests': past_contests})
 
 def ContestDashboard(request, id):
+    users = User.objects.filter(is_superuser=False)
     contest = get_object_or_404(models.Contest, pk=id)
     contest_notifications = models.ContestNotification.objects.filter(contest=contest)
     contest_tasks = models.ContestTask.objects.filter(contest=contest)
@@ -46,7 +48,7 @@ def ContestDashboard(request, id):
         submissions = None
 
     ct_pf = forms.ContestTaskPackageForm()
-    return render(request, 'SKE_CONTESTS/contest_dash.html', context={'contest': contest, 'cont_notfis': contest_notifications, 'form': ct_pf, 'tasks': contest_tasks, 'submissions': submissions, 'tpassed': tasks_passed, 'terror': tasks_erorrs, 'tspassed': tasks_semipassed, 'tnpassed': tasks_not_passed})
+    return render(request, 'SKE_CONTESTS/contest_dash.html', context={'contest': contest, 'users': users, 'cont_notfis': contest_notifications, 'form': ct_pf, 'tasks': contest_tasks, 'submissions': submissions, 'tpassed': tasks_passed, 'terror': tasks_erorrs, 'tspassed': tasks_semipassed, 'tnpassed': tasks_not_passed})
 
 @login_required
 def ListSubmissions(request, id):
@@ -99,3 +101,13 @@ def SendContestTaskSubmission(request, id):
     else:
         messages.add_message(request, messages.ERROR, 'Nie udało się przesłać zgłoszenia', 'is-danger')
     return redirect("ContestDashboard", id=task.contest.id)
+
+def GetUserResult(request, uid, tid):
+    user = get_object_or_404(User, pk=uid);
+    task = get_object_or_404(models.ContestTask, pk=tid)
+
+    try:
+        last_subm = models.ContestTaskSubmission.objects.filter(author=user, task=task).latest('id');
+        return HttpResponse(last_subm.score)
+    except:
+        return HttpResponse("NIE WYSŁANO")

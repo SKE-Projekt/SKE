@@ -1,0 +1,36 @@
+<section class="section" style="margin-bottom: 8rem;">
+    <div class="columns">
+        <div class="column">
+        <div style="opacity: 0;">
+            <div class="header">
+                12312
+            </div>
+            </br>
+            </br>
+        </div>
+        {% for user in users %}
+            <div class="" style="height: 50px; display: flex; 
+  align-items: center;
+  justify-content: center; flex-direction: column; align-content: center; justify-items: center;">
+                {{ user.username }}
+            </div>
+        {% endfor %}
+        </div>
+        {% for task in tasks %}
+        <div class="column">
+            <div class="header" style="height: 1rem;">
+                {{ task.title }}
+            </div>
+            </br>
+            </br>
+            <div class="body has-text-centered" style="height: 50px; display: flex; 
+  align-items: center;
+  justify-content: center; flex-direction: column; align-content: center; justify-items: center; height">
+            {% for user in users %}
+                <div id="{{ user.id }}-task-{{ task.id }}-result" class=" is-vcentered">BRAK</div>
+            {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>

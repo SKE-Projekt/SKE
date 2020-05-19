@@ -11,4 +11,5 @@ urlpatterns = [
     path('contest/submission/<int:id>', views.SubmissionDashboard, name='SubmissionDashboard'),
     path('contest/<int:id>/submissions', views.ListSubmissions, name='ListSubmissions'),
     path('contest/api/<int:id>/upload_package', views.UploadContestTaskPackage, name='UploadContestTaskPackage'),
+    path('contest/api/ranking/<int:uid>/<int:tid>', views.GetUserResult, name='GetUserResult'),
 ]

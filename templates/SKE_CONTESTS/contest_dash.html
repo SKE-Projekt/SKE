@@ -143,12 +143,23 @@
     </div>
 </section>
 
-{% if ranking %}
 <section class="hero is-warning has-text-centered">
     <div class="hero-body">
         <h1 class="title">Ranking</h1>
     </div>
 </section>
-{% include 'SKE_CONTEST/_ranking.html' %}
-{% endif %}
+{% include 'SKE_CONTESTS/_ranking.html' %}
 {% endblock content %}
+
+{% block scripts %}
+{% for user in users %}
+    {% for task in tasks %}
+    <script>
+        $.get("{% url 'GetUserResult' uid=user.id tid=task.id %}").done(function(data) {
+            {% comment %} alert(data); {% endcomment %}
+            $("#{{ user.id }}-task-{{ task.id }}-result").html(data);
+        });
+    </script>
+    {% endfor %}
+{% endfor %}
+{% endblock scripts %}
