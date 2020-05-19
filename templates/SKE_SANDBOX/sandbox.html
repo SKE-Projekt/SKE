@@ -16,10 +16,11 @@
     {{ form.as_p }}
 </form>
 
-<section class="hero sandbox-hero has-text-centered">
-    <div class="hero-body sandbox-hero-body">
+<section class="sandbox-hero has-text-centered">
+</br>
+</br>
         <div class="columns">
-            <div class="column is-two-thirds-desktop is-full-mobile is-full-tablet">
+            <div class="column is-two-thirds-fullhd is-full-widescreen is-full-desktop is-full-mobile is-full-tablet">
                 <div id="editor" class="editor"></div>
                 {% if user.is_authenticated %}
                     <a id="executeCode" href="" class="button is-success">Uruchom program</a>
@@ -27,7 +28,7 @@
                     <a href="">Aby skorzystać z sandboxa musisz być zalogowany.</a>
                 {% endif %}
             </div>
-            <div id="input-column" class="column is-one-third-desktop is-full-mobile is-full-tablet">
+            <div id="input-column" class="column is-one-third-fullhd is-full-widescreen is-full-desktop is-full-mobile is-full-tablet">
                 <h1 class="title" style="margin-bottom: 1px;">Wejście</h1>
                 <div class="section input-data">
                     <div class="control">
@@ -44,7 +45,6 @@
                 </div>
             </div>
         </div>
-    </div>
 </section>
 
 <section class="hero is-warning has-text-centered">
