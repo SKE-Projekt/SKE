@@ -18,18 +18,20 @@
         </div>
         {% for task in tasks %}
         <div class="column">
+            <div class="columns"
             <div class="header" style="height: 1rem;">
                 {{ task.title }}
             </div>
             </br>
             </br>
-            <div class="body has-text-centered" style="height: 50px; display: flex; 
+            <div class="body has-text-centered column" style="height: 50px; display: flex; 
   align-items: center;
   justify-content: center; flex-direction: column; align-content: center; justify-items: center; height">
             {% for user in users %}
-                <div id="{{ user.id }}-task-{{ task.id }}-result" class=" is-vcentered">BRAK</div>
+                <div id="{{ user.id }}-task-{{ task.id }}-result" class="">BRAK</div>
             {% endfor %}
             </div>
+            </br>
         </div>
         {% endfor %}
     </div>
